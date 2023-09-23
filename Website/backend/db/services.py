@@ -88,50 +88,6 @@ def delete_ride_request(ride_request_id):
     if ride_request:
         ride_request.delete()   
 
-# Assigned Ride Services
-def create_assigned_ride(data):
-    assigned_ride = AssignedRide(**data)
-    assigned_ride.save()
-    return assigned_ride
-
-def get_assigned_ride(assigned_ride_id):
-    return AssignedRide.objects(id=assigned_ride_id).first()
-
-def update_assigned_ride(assigned_ride_id, data):
-    assigned_ride = get_assigned_ride(assigned_ride_id)
-    if assigned_ride:
-        for key, value in data.items():
-            setattr(assigned_ride, key, value)
-        assigned_ride.save()
-    return assigned_ride
-
-def delete_assigned_ride(assigned_ride_id):
-    assigned_ride = get_assigned_ride(assigned_ride_id)
-    if assigned_ride:
-        assigned_ride.delete()
-
-# Bus Trip Rider Services
-def create_bus_trip_rider(data):
-    bus_trip_rider = BusTripRider(**data)
-    bus_trip_rider.save()
-    return bus_trip_rider
-
-def get_bus_trip_rider(bus_trip_rider_id):
-    return BusTripRider.objects(id=bus_trip_rider_id).first()
-
-def update_bus_trip_rider(bus_trip_rider_id, data):
-    bus_trip_rider = get_bus_trip_rider(bus_trip_rider_id)
-    if bus_trip_rider:
-        for key, value in data.items():
-            setattr(bus_trip_rider, key, value)
-        bus_trip_rider.save()
-    return bus_trip_rider
-
-def delete_bus_trip_rider(bus_trip_rider_id):
-    bus_trip_rider = get_bus_trip_rider(bus_trip_rider_id)
-    if bus_trip_rider:
-        bus_trip_rider.delete()
-
 # Driver Services
 def create_driver(data):
     driver = Driver(**data)
