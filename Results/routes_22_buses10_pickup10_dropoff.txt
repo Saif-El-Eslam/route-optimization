@@ -1,0 +1,310 @@
+Bus 0: 
+(42.3226625, -85.5473919)
+(42.1996309, -85.6276723)
+(42.2050614, -85.6142273)
+(42.2168338, -85.5848825)
+(42.2868088, -85.5796208)
+(42.2906376, -85.6517559)
+Total Number of Passengers: 3
+Total Distance: 29.69 miles
+Total Duration: 56.26 minutes
+Time Saved: 16
+Average Pick Up Delay: 0.0
+Average Drop Off Delay: 2.3333333333333335
+----------------------------------------------
+Bus 1: 
+(42.2666994, -85.6880877)
+(42.2929099, -85.6855413)
+(42.2836978, -85.7507622)
+(42.2836978, -85.7507622)
+(42.293878, -85.70643)
+(42.2808549, -85.6031249)
+(42.2808549, -85.6031249)
+(42.2808549, -85.6031249)
+(42.1842898, -85.6232911)
+(42.2808549, -85.6031249)
+Total Number of Passengers: 5
+Total Distance: 36.1 miles
+Total Duration: 64.82 minutes
+Time Saved: 185
+Average Pick Up Delay: 1.8
+Average Drop Off Delay: 1.6
+----------------------------------------------
+Bus 2: 
+(42.2991703, -85.5544953)
+(42.2977748, -85.5624162)
+(42.2941977, -85.577075)
+(42.2941977, -85.577075)
+(42.3321206, -85.5585162)
+(42.2808903, -85.5517207)
+(42.3082288, -85.5818602)
+(42.2808903, -85.5517207)
+(42.2186471, -85.5983267)
+(42.2439946, -85.5861347)
+(42.2439946, -85.5861347)
+(42.2442903, -85.5829767)
+(42.2808549, -85.6031249)
+(42.2808549, -85.6031249)
+(42.2808549, -85.6031249)
+(42.2808549, -85.6031249)
+Total Number of Passengers: 8
+Total Distance: 33.27 miles
+Total Duration: 75.75 minutes
+Time Saved: 152
+Average Pick Up Delay: 3.875
+Average Drop Off Delay: 0.125
+----------------------------------------------
+Bus 3: 
+(42.2470918, -85.5940978)
+(42.289091, -85.5730391)
+(42.3023157, -85.6259584)
+(42.2871336, -85.5802602)
+(42.2403599, -85.4972361)
+(42.2808549, -85.6031249)
+Total Number of Passengers: 3
+Total Distance: 28.3 miles
+Total Duration: 65.02 minutes
+Time Saved: 80
+Average Pick Up Delay: 3.3333333333333335
+Average Drop Off Delay: 0.0
+----------------------------------------------
+Bus 4: 
+(42.2845248, -85.6102235)
+(42.1666571, -85.5293177)
+(42.120423, -85.5307056)
+(42.3910948, -85.6264769)
+Total Number of Passengers: 2
+Total Distance: 43.29 miles
+Total Duration: 56.99 minutes
+Time Saved: 8
+Average Pick Up Delay: 0.0
+Average Drop Off Delay: 0.0
+----------------------------------------------
+Bus 5: 
+(42.334607, -85.5355127)
+(42.2474764, -85.5365967)
+(42.1818636, -85.5282718)
+(42.2747214, -85.5373227)
+Total Number of Passengers: 2
+Total Distance: 21.1 miles
+Total Duration: 40.67 minutes
+Time Saved: 32
+Average Pick Up Delay: 0.0
+Average Drop Off Delay: 0.0
+----------------------------------------------
+Bus 6: 
+(42.2475577, -85.5945787)
+(42.2008199, -85.6894113)
+(42.2523655, -85.6836554)
+(42.2529993, -85.6824559)
+(42.2975667, -85.6420939)
+(42.2975088, -85.6419512)
+(42.2808549, -85.6031249)
+(42.2808549, -85.6031249)
+(42.2808549, -85.6031249)
+(42.2808549, -85.6031249)
+Total Number of Passengers: 5
+Total Distance: 22.69 miles
+Total Duration: 40.96 minutes
+Time Saved: 145
+Average Pick Up Delay: 1.2
+Average Drop Off Delay: 0.8
+----------------------------------------------
+Bus 7: 
+(42.2513353, -85.5636076)
+(42.2709567, -85.5921189)
+(42.2421546, -85.6495691)
+(42.2808549, -85.6031249)
+(42.2151137, -85.6324298)
+(42.1977903, -85.6329741)
+(42.2028954, -85.6004761)
+(42.245557, -85.5426275)
+Total Number of Passengers: 4
+Total Distance: 29.82 miles
+Total Duration: 63.29 minutes
+Time Saved: 100
+Average Pick Up Delay: 3.5
+Average Drop Off Delay: 0.0
+----------------------------------------------
+Bus 8: 
+(42.2077529, -85.6087517)
+(42.3416573, -85.2935956)
+Total Number of Passengers: 1
+Total Distance: 22.34 miles
+Total Duration: 29.31 minutes
+Time Saved: 1
+Average Pick Up Delay: 0.0
+Average Drop Off Delay: 0.0
+----------------------------------------------
+Bus 9: 
+(42.399715, -85.457795)
+(42.2941977, -85.577075)
+(42.0923672, -85.6643976)
+(42.2888714, -85.5832356)
+Total Number of Passengers: 2
+Total Distance: 49.62 miles
+Total Duration: 70.8 minutes
+Time Saved: 85
+Average Pick Up Delay: 0.0
+Average Drop Off Delay: 0.0
+----------------------------------------------
+Bus 10: 
+(42.1543539, -85.4727853)
+(42.2918827, -85.5878173)
+(42.1369035, -85.4914085)
+(42.153731, -85.5654524)
+(42.290658, -85.601255)
+(42.2808549, -85.6031249)
+Total Number of Passengers: 3
+Total Distance: 63.31 miles
+Total Duration: 96.02 minutes
+Time Saved: 3
+Average Pick Up Delay: 3.3333333333333335
+Average Drop Off Delay: 2.3333333333333335
+----------------------------------------------
+Bus 11: 
+(42.2581612, -85.5550967)
+(42.1957707, -85.598849)
+(42.1707126, -85.6478465)
+(42.1494793, -85.6137927)
+(42.1642518, -85.6032281)
+(42.2808549, -85.6031249)
+(42.2808549, -85.6031249)
+(42.2808549, -85.6031249)
+Total Number of Passengers: 4
+Total Distance: 37.87 miles
+Total Duration: 65.92 minutes
+Time Saved: 59
+Average Pick Up Delay: 1.25
+Average Drop Off Delay: 3.0
+----------------------------------------------
+Bus 12: 
+(42.2964597, -85.6320449)
+(42.2727865, -85.5967396)
+(42.2749172, -85.642907)
+(42.2899382, -85.6421558)
+(42.2911409, -85.5853679)
+(42.3092316, -85.5582201)
+(42.3344769, -85.5210075)
+(42.3237257, -85.5596618)
+(42.2808549, -85.6031249)
+(42.2808549, -85.6031249)
+Total Number of Passengers: 5
+Total Distance: 26.76 miles
+Total Duration: 61.76 minutes
+Time Saved: 84
+Average Pick Up Delay: 0.8
+Average Drop Off Delay: 2.0
+----------------------------------------------
+Bus 13: 
+(42.3747781, -85.4683159)
+(42.3726013, -85.4390081)
+(42.3692365, -85.4629994)
+(42.2845248, -85.6102235)
+Total Number of Passengers: 2
+Total Distance: 13.69 miles
+Total Duration: 27.29 minutes
+Time Saved: 38
+Average Pick Up Delay: 0.0
+Average Drop Off Delay: 0.0
+----------------------------------------------
+Bus 14: 
+(42.2829969, -85.5859105)
+(42.2764887, -85.6022612)
+(42.2036211, -85.6114028)
+(42.3024197, -85.5999395)
+Total Number of Passengers: 2
+Total Distance: 20.07 miles
+Total Duration: 35.91 minutes
+Time Saved: 27
+Average Pick Up Delay: 5.0
+Average Drop Off Delay: 0.0
+----------------------------------------------
+Bus 15: 
+(42.2933292, -85.409809)
+(42.2873505, -85.4275675)
+(42.2808549, -85.6031249)
+(42.2808549, -85.6031249)
+Total Number of Passengers: 2
+Total Distance: 13.27 miles
+Total Duration: 21.67 minutes
+Time Saved: 48
+Average Pick Up Delay: 0.0
+Average Drop Off Delay: 4.5
+----------------------------------------------
+Bus 16: 
+(42.1410135, -85.5033838)
+(42.2808903, -85.5517207)
+(42.1689581, -85.5883617)
+(42.2906376, -85.6517559)
+Total Number of Passengers: 2
+Total Distance: 38.36 miles
+Total Duration: 58.32 minutes
+Time Saved: 22
+Average Pick Up Delay: 4.5
+Average Drop Off Delay: 0.0
+----------------------------------------------
+Bus 17: 
+(42.3280919, -85.5221051)
+(42.3060585, -85.558057)
+(42.3071286, -85.4735514)
+(42.2868088, -85.5796208)
+(42.1833219, -85.6292565)
+(42.291374, -85.5786628)
+Total Number of Passengers: 3
+Total Distance: 35.78 miles
+Total Duration: 65.33 minutes
+Time Saved: 42
+Average Pick Up Delay: 6.0
+Average Drop Off Delay: 0.0
+----------------------------------------------
+Bus 18: 
+(42.1729487, -85.5844838)
+(42.2868088, -85.5796208)
+(42.3558935, -85.6638559)
+(42.2955932, -85.6296204)
+Total Number of Passengers: 2
+Total Distance: 21.1 miles
+Total Duration: 40.92 minutes
+Time Saved: 29
+Average Pick Up Delay: 2.5
+Average Drop Off Delay: 0.0
+----------------------------------------------
+Bus 19: 
+(42.2457494, -85.7262985)
+(42.2808903, -85.5517207)
+(42.2666994, -85.6880877)
+(42.2272007, -85.6807872)
+Total Number of Passengers: 2
+Total Distance: 28.53 miles
+Total Duration: 49.52 minutes
+Time Saved: 20
+Average Pick Up Delay: 4.5
+Average Drop Off Delay: 0.0
+----------------------------------------------
+Bus 20: 
+(42.262203, -85.5794339)
+(42.245557, -85.5426275)
+(42.2196805, -85.5701549)
+(42.2808549, -85.6031249)
+(42.2325629, -85.6041807)
+(42.2871336, -85.5802602)
+Total Number of Passengers: 3
+Total Distance: 24.73 miles
+Total Duration: 55.64 minutes
+Time Saved: 101
+Average Pick Up Delay: 1.6666666666666667
+Average Drop Off Delay: 0.0
+----------------------------------------------
+Bus 21: 
+(42.3407718, -85.5316711)
+(42.2808903, -85.5517207)
+(42.2433058, -85.6014202)
+(42.2808903, -85.5517207)
+Total Number of Passengers: 2
+Total Distance: 21.47 miles
+Total Duration: 35.02 minutes
+Time Saved: 38
+Average Pick Up Delay: 0.0
+Average Drop Off Delay: 0.0
+----------------------------------------------
