@@ -1,16 +1,18 @@
-from mongoengine import Document, StringField, IntField, DateTimeField, ListField, DecimalField
+from mongoengine import Document, StringField, IntField, DateTimeField, ListField, DecimalField, ListField
 
 class Bus(Document):
     bus_number = StringField(required=True, max_length=20)
     capacity = IntField()
     current_location = StringField(max_length=100)
+    route = ListField(ListField(StringField(max_length=100)))
+    assigned_trips = ListField(StringField(max_length=100))
     status = StringField(max_length=20)
 
 class Trip(Document):
-    bus_id = IntField()
-    driver_id = IntField()
-    route = StringField(max_length=100)
-    departure_time = DateTimeField()
+    bus_id = StringField(max_length=50)
+    rider_id = StringField(max_length=50)
+    request_time = DateTimeField()
+    pickup_time = DateTimeField()
     arrival_time = DateTimeField()
     status = StringField(max_length=20)
 
@@ -26,16 +28,6 @@ class RideRequest(Document):
     end_location = StringField(max_length=100)
     status = StringField(max_length=20)
 
-class AssignedRide(Document):
-    ride_request_id = IntField()
-    trip_id = IntField()
-    assignment_time = DateTimeField()
-
-class BusTripRider(Document):
-    assignment_id = IntField()
-    rider_id = IntField()
-    arrival_time = DateTimeField()
-    status = StringField(max_length=20)
 
 class Driver(Document):
     first_name = StringField(max_length=50)
