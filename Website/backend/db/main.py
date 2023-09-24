@@ -7,8 +7,8 @@ if __name__ == "__main__":
     bus_data = {
         "bus_number": "Bus123",
         "capacity": 50,
-        "current_location": "Station A",
-        "status": "Active"
+        "current_location": [-73.985664, 40.748514],
+        "status": "Active",
     }
     created_bus = create_bus(bus_data)
     print("Created Bus:", created_bus.bus_number)
@@ -18,7 +18,7 @@ if __name__ == "__main__":
     print("Retrieved Bus:", retrieved_bus.bus_number)
 
     # # Example: Update a bus
-    update_data = {"current_location": "Station B"}
+    update_data = {"current_location": [-73.985664, 40.748514]}
     updated_bus = update_bus(retrieved_bus.id, update_data)
     print("Updated Bus Location:", updated_bus.current_location)
 
