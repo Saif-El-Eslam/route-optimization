@@ -10,6 +10,7 @@ const LocationPicker = () => {
   const [pickupLocation, setPickupLocation] = useState("");
   const [dropoffLocation, setDropoffLocation] = useState("");
   const [confirmed, setConfirmed] = useState(false);
+  const [response, setResponse] = useState(null);
 
   const pickupGeocoderRef = useRef(null);
   const dropoffGeocoderRef = useRef(null);
@@ -56,10 +57,37 @@ const LocationPicker = () => {
     );
   }, []);
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (pickupLocation && dropoffLocation) {
       setConfirmed(true);
-      // TODO: Send pickupLocation and dropoffLocation to backend
+      // body: { pickupLocation, dropoffLocation , time, passenger count}
+      const time = new Date();
+      const passengerCount = 1;
+      const requestData = {
+        pickupLocation,
+        dropoffLocation,
+        time,
+        passengerCount,
+      };
+      try {
+        const response = await fetch("http://localhost:5000/process_request", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP Error! Status: ${response.status}`);
+        }
+
+        const responseData = await response.json();
+        setResponse(responseData);
+        console.log(responseData);
+      } catch (error) {
+        console.error("Error:", error);
+      }
     }
   };
 
