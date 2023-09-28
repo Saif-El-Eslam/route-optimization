@@ -1,0 +1,75 @@
+.ride-container {
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+}
+
+.ride-info-container {
+  width: 30%;
+  height: 83vh;
+
+  padding-top: 120px;
+  margin: 0 20px 0 50px;
+}
+
+.ride-info-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 32px;
+  color: #12113d;
+  margin: 20px;
+  height: 100px;
+}
+
+.ride-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 20px;
+}
+
+.ride-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ride-info-item-header {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 32px;
+  color: #12113d;
+}
+
+.ride-info-item-content {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.ride-info-item-content-address {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 32px;
+  color: #12113d;
+}
+
+.ride-info-item-content-city {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 32px;
+  color: #12113d;
+}
+
+.ride-map-container {
+  width: 70%;
+  height: 83vh;
+
+  padding-top: 120px;
+  margin: 0 20px;
+}
