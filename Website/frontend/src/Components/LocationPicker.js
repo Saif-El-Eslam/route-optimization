@@ -61,14 +61,19 @@ const LocationPicker = () => {
     if (pickupLocation && dropoffLocation) {
       setConfirmed(true);
       // body: { pickupLocation, dropoffLocation , time, passenger count}
-      const time = new Date();
+      const requestTime = new Date()
+        .toISOString()
+        .slice(0, 19)
+        .replace("T", " ");
+
       const passengerCount = 1;
       const requestData = {
-        pickupLocation,
-        dropoffLocation,
-        time,
-        passengerCount,
+        requestTime: requestTime,
+        pickupLocation: pickupLocation,
+        dropoffLocation: dropoffLocation,
+        passengerCount: passengerCount,
       };
+      console.log(requestData);
       try {
         const response = await fetch("http://localhost:5000/process_request", {
           method: "POST",
