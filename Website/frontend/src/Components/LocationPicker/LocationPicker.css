@@ -2,17 +2,40 @@
 .location-picker-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
+  height: 55vh;
+  width: 450px;
   padding: 20px;
+
+  /* style the background */
+  background-color: rgba(18, 17, 61, 0.9);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  /* position */
+  position: absolute;
+  top: 55vh;
+  left: 200px;
+  transform: translate(-25%, -50%);
 }
+
+.location-picker-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 32px;
+  color: #e7eff1;
+  margin: 20px;
+  height: 100px;
+}
+
 /* Style for the search container */
 .search-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  margin: auto 0;
 }
 
 .mapboxgl-ctrl-geocoder {
@@ -25,13 +48,24 @@
 }
 
 /* Style for the input box */
+#pickup-box {
+  width: fit-content;
+  padding: 5px 20px;
+}
+
+#dropoff-box {
+  width: fit-content;
+  padding: 5px 20px;
+}
 
 .mapboxgl-ctrl-geocoder input[type="text"] {
-  padding: 10px;
+  padding: 7px 15px;
   font-size: 26px;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  width: 370px;
 }
 
 .mapboxgl-ctrl-geocoder--pin-right {
@@ -47,13 +81,6 @@
   margin-left: 10px;
   cursor: pointer;
   margin-bottom: 30px;
-}
-
-.mapboxgl-ctrl-geocoder--icon-loading {
-  display: none;
-}
-.mapboxgl-ctrl-geocoder--icon-search {
-  display: none;
 }
 .mapboxgl-ctrl-geocoder--button {
   position: relative;
@@ -72,6 +99,13 @@
   border: none;
   padding: 0;
   cursor: pointer;
+}
+
+.mapboxgl-ctrl-geocoder--icon {
+  fill: #fff;
+}
+.mapboxgl-ctrl-geocoder--icon-search {
+  display: none;
 }
 
 /* Style for suggestions wrapper */
@@ -98,18 +132,41 @@
 }
 
 /* Style for the Confirm Locations button */
-.confirm {
-  margin-left: -30px;
-  padding: 10px 20px;
-  background-color: #0073e6;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  font-size: 20px;
+.location-picker-button-container {
+  margin: 20px;
 }
 
-.confirm:hover {
-  background-color: #0066cc;
+.confirm {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 26px;
+  border: none;
+  border-radius: 5px;
+  background-color: #eeeeee;
+  color: #333333;
+  cursor: pointer;
+  margin: auto 0;
+
+  width: 200px;
+  height: 45px;
+
+  /* style the hover */
+  &:hover {
+    background-color: #cccccc;
+    color: #12113d;
+    transition: all 0.2s ease-in-out;
+  }
+
+  /* style the active */
+  &:active {
+    background-color: #b2b2b2;
+  }
+}
+
+.confirm-link {
+  text-decoration: none;
+  color: #333333;
 }
