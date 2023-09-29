@@ -44,27 +44,80 @@ def delete_trip(trip_id):
     if trip:
         trip.delete()
 
-# Rider Services
-def create_rider(data):
-    rider = Rider(**data)
-    rider.save()
-    return rider
+# User Services
+def create_user(data):
+    # if type is 0, create rider
+    # if type is 1, create driver and license number is required
+    # if type is 2, create admin
+    if data['role'] == 1:
+        if 'license_number' not in data:
+            return { error: 'license_number is required for driver' }
+    user = User(**data)
+    user.save()
+    return user
 
-def get_rider(rider_id):
-    return Rider.objects(id=rider_id).first()
+def get_user(user_id):
+    return User.objects(id=user_id).first()
 
-def update_rider(rider_id, data):
-    rider = get_rider(rider_id)
-    if rider:
+def update_user(user_id, data):
+    user = get_user(user_id)
+    if user:
         for key, value in data.items():
-            setattr(rider, key, value)
-        rider.save()
-    return rider
+            setattr(user, key, value)
+        user.save()
+    return user
 
-def delete_rider(rider_id):
-    rider = get_rider(rider_id)
-    if rider:
-        rider.delete()
+def delete_user(user_id):
+    user = get_user(user_id)
+    if user:
+        user.delete()
+
+def get_users_by_role(role):
+    return User.objects(role=role)
+
+# # Rider Services
+# def create_rider(data):
+#     rider = Rider(**data)
+#     rider.save()
+#     return rider
+
+# def get_rider(rider_id):
+#     return Rider.objects(id=rider_id).first()
+
+# def update_rider(rider_id, data):
+#     rider = get_rider(rider_id)
+#     if rider:
+#         for key, value in data.items():
+#             setattr(rider, key, value)
+#         rider.save()
+#     return rider
+
+# def delete_rider(rider_id):
+#     rider = get_rider(rider_id)
+#     if rider:
+#         rider.delete()
+
+# # Driver Services
+# def create_driver(data):
+#     driver = Driver(**data)
+#     driver.save()
+#     return driver
+
+# def get_driver(driver_id):
+#     return Driver.objects(id=driver_id).first()
+
+# def update_driver(driver_id, data):
+#     driver = get_driver(driver_id)
+#     if driver:
+#         for key, value in data.items():
+#             setattr(driver, key, value)
+#         driver.save()
+#     return driver
+
+# def delete_driver(driver_id):
+#     driver = get_driver(driver_id)
+#     if driver:
+#         driver.delete()
 
 # Ride Request Services
 def create_ride_request(data):
@@ -87,28 +140,6 @@ def delete_ride_request(ride_request_id):
     ride_request = get_ride_request(ride_request_id)
     if ride_request:
         ride_request.delete()   
-
-# Driver Services
-def create_driver(data):
-    driver = Driver(**data)
-    driver.save()
-    return driver
-
-def get_driver(driver_id):
-    return Driver.objects(id=driver_id).first()
-
-def update_driver(driver_id, data):
-    driver = get_driver(driver_id)
-    if driver:
-        for key, value in data.items():
-            setattr(driver, key, value)
-        driver.save()
-    return driver
-
-def delete_driver(driver_id):
-    driver = get_driver(driver_id)
-    if driver:
-        driver.delete()
 
 # Payment Transaction Services
 def create_payment_transaction(data):

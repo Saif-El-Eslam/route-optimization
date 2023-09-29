@@ -6,6 +6,7 @@ from mongoengine import (
     ListField,
     DecimalField,
     ListField,
+    BooleanField,
 )
 
 
@@ -26,12 +27,25 @@ class Trip(Document):
     arrival_time = DateTimeField()
     status = StringField(max_length=20)
 
-
-class Rider(Document):
+class User(Document):
     username = StringField(max_length=50)
     email = StringField(max_length=100)
     phone_number = StringField(max_length=15)
+    password = StringField(max_length=20)
+    role = IntField(max_length=20)
+    # 0: rider, 1: driver, 2: admin
+    license_number = StringField(max_length=20)
+    verified = BooleanField(default=False)
 
+# class Rider(Document):
+#     username = StringField(max_length=50)
+#     email = StringField(max_length=100)
+#     phone_number = StringField(max_length=15)
+
+# class Driver(Document):
+#     first_name = StringField(max_length=50)
+#     last_name = StringField(max_length=50)
+#     license_number = StringField(max_length=20)
 
 class RideRequest(Document):
     rider_id = IntField()
@@ -39,12 +53,6 @@ class RideRequest(Document):
     start_location = StringField(max_length=100)
     end_location = StringField(max_length=100)
     status = StringField(max_length=20)
-
-
-class Driver(Document):
-    first_name = StringField(max_length=50)
-    last_name = StringField(max_length=50)
-    license_number = StringField(max_length=20)
 
 
 class PaymentTransaction(Document):
