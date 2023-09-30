@@ -3,6 +3,7 @@ import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "./LocationPicker.css";
 import { useNavigate } from "react-router-dom";
+import { setRide } from "../../ReduxStore/actions";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiaGFuZy1obyIsImEiOiJjbDA2M3F6bm4xcW05M2RvZHhpeDFsZTVvIn0.Ot8ZrqGcvLYWRLzyXtkUdA";
@@ -32,7 +33,10 @@ const LocationPicker = ({
       pickupGeocoderRef.current = pickupGeocoder;
       pickupGeocoder.addTo("#pickup-box");
       pickupGeocoder.on("result", (e) => {
-        setPickupLocation(e.result.geometry.coordinates);
+        setPickupLocation({
+          coordinates: e.result.geometry.coordinates,
+          address: e.result.place_name,
+        });
       });
     }
 
@@ -45,23 +49,31 @@ const LocationPicker = ({
       dropoffGeocoderRef.current = dropoffGeocoder;
       dropoffGeocoder.addTo("#dropoff-box");
       dropoffGeocoder.on("result", (e) => {
-        setDropoffLocation(e.result.geometry.coordinates);
+        setDropoffLocation({
+          coordinates: e.result.geometry.coordinates,
+          address: e.result.place_name,
+        });
       });
     }
 
     // Fetch the user's current location using Geolocation API
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        const coordinates = [longitude, latitude]; // Reversed for Mapbox
-        setPickupLocation(coordinates); // Set the current location in the pickup box
-        pickupGeocoderRef.current.setPlaceholder(`Current Location`);
-      },
-      (error) => {
-        console.error("Error fetching current location:", error);
-      }
-    );
-  });
+    if (!pickupLocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const coordinates = [longitude, latitude]; // Reversed for Mapbox
+          setPickupLocation({
+            coordinates: coordinates,
+            address: "Current Location",
+          }); // Set the current location in the pickup box
+          pickupGeocoderRef.current.setPlaceholder(`Current Location`);
+        },
+        (error) => {
+          console.error("Error fetching current location:", error);
+        }
+      );
+    }
+  }, []);
 
   const handleConfirm = async () => {
     if (pickupLocation && dropoffLocation) {
@@ -91,6 +103,13 @@ const LocationPicker = ({
       // } catch (error) {
       //   console.error("Error:", error);
       // }
+      setRide({
+        pickupLocation,
+        dropoffLocation,
+        // time to string
+        time: new Date().toLocaleString(),
+        passengerCount: 1,
+      });
       navigate("/ride");
     }
   };

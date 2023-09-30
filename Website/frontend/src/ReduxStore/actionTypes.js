@@ -1,0 +1,6 @@
+/////////////////////////// RIDE ACTIONS ///////////////////////////
+export const SET_RIDE = "SET_RIDE";
+export const UPDATE_RIDE = "UPDATE_RIDE";
+
+/////////////////////////// USER ACTIONS ///////////////////////////
+export const SET_USER = "SET_USER";
