@@ -1,16 +1,16 @@
-from flask import Flask
-from flask_cors import CORS
-import sys
-
-sys.path.append("f:/FreeLance/yasser/route-optimization/Website/backend/db")
-sys.path.append("f:/FreeLance/yasser/route-optimization/Website/backend/routes")
+from flask import Flask, request, jsonify
+from datetime import datetime
+from db_connection import db
+from schemas import *
+from services import *
 
 app = Flask(__name__)
-CORS(app)
 
-# Import requests' handlers
-from routes.process_request import *
-from routes.auth import *
+# Simulated data for bus routes and buses
+bus_routes = {
+    "Route A": ["Bus 101", "Bus 102"],
+    "Route B": ["Bus 201", "Bus 202"],
+}
 
 
 # Define a route to handle incoming requests
@@ -40,11 +40,6 @@ def process_request():
 
         # 2. get all the buses and their current locations from the database (Bus document)
         buses = get_all_buses()
-
-        # For each bus
-        # Test: locations:  [current location/deopt, route, pickup location, dropoff location]
-        # Test: time_windows: [[0, 100], [0, 100], [0, 100], [0, 100]]
-
         # 3. find the best bus to assign to the request
         # data to send : [depot, list locations]
         # a.
