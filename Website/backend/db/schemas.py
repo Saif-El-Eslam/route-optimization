@@ -17,6 +17,7 @@ class Bus(Document):
     route = ListField(ListField(StringField(max_length=100)))
     assigned_trips = ListField(StringField(max_length=100))
     status = StringField(max_length=20)
+    depot = ListField(DecimalField(precision=6))
 
 
 class Trip(Document):
@@ -29,6 +30,7 @@ class Trip(Document):
     dropoff_location = ListField(DecimalField(precision=6))
     status = StringField(max_length=20)
 
+
 class User(Document):
     username = StringField(max_length=50)
     email = StringField(max_length=100)
@@ -39,6 +41,7 @@ class User(Document):
     license_number = StringField(max_length=20)
     verified = BooleanField(default=False)
 
+
 # class Rider(Document):
 #     username = StringField(max_length=50)
 #     email = StringField(max_length=100)
@@ -48,6 +51,7 @@ class User(Document):
 #     first_name = StringField(max_length=50)
 #     last_name = StringField(max_length=50)
 #     license_number = StringField(max_length=20)
+
 
 class RideRequest(Document):
     rider_id = StringField(max_length=50)
