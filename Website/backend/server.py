@@ -1,9 +1,12 @@
+import sys
+sys.path.append('f:/FreeLance/yasser/route-optimization/Website/backend/db')
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from db_connection import db
-from schemas import *
-from services import *
 from datetime import datetime
+from db.db_connection import db
+from db.schemas import *
+from db.services import *
+
 
 
 app = Flask(__name__)
