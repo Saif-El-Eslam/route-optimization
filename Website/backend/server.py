@@ -43,6 +43,11 @@ def process_request():
 
         # 2. get all the buses and their current locations from the database (Bus document)
         buses = get_all_buses()
+
+        # For each bus
+        # Test: locations:  [current location/deopt, route, pickup location, dropoff location]
+        # Test: time_windows: [[0, 100], [0, 100], [0, 100], [0, 100]]
+
         # 3. find the best bus to assign to the request
         # data to send : [depot, list locations]
         # a.
