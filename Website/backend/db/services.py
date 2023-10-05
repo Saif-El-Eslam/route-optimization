@@ -2,6 +2,32 @@
 from schemas import *
 
 
+# User Services
+def create_user(data):
+    user = User(**data)
+    user.save()
+    return user
+
+def get_user_by_id(user_id):
+    return User.objects(id=user_id).first()
+
+def get_user_by_email(email):
+    return User.objects(email=email).first()
+
+def update_user(user_id, data):
+    user = get_user_by_id(user_id)
+    if user:
+        for key, value in data.items():
+            setattr(user, key, value)
+        user.save()
+    return user
+
+def delete_user(user_id):
+    user = get_user(user_id)
+    if user:
+        user.delete()
+
+
 # Bus Services
 def create_bus(data):
     bus = Bus(**data)

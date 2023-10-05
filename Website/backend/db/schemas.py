@@ -36,10 +36,11 @@ class User(Document):
     email = StringField(max_length=100)
     phone_number = StringField(max_length=15)
     password = StringField(max_length=20)
-    role = IntField(max_length=20)
+    role = IntField(max_length=2)
     # 0: rider, 1: driver, 2: admin
     license_number = StringField(max_length=20)
     verified = BooleanField(default=False)
+    token = StringField(max_length=200)
 
 
 # class Rider(Document):
