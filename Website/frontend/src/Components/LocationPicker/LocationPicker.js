@@ -4,6 +4,7 @@ import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "./LocationPicker.css";
 import { useNavigate } from "react-router-dom";
 import { setRide } from "../../ReduxStore/actions";
+import { reqestRide } from "../../APIFunctions/DBFunctions.js";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiaGFuZy1obyIsImEiOiJjbDA2M3F6bm4xcW05M2RvZHhpeDFsZTVvIn0.Ot8ZrqGcvLYWRLzyXtkUdA";
@@ -110,7 +111,19 @@ const LocationPicker = ({
         time: new Date().toLocaleString(),
         passengerCount: 1,
       });
-      navigate("/ride");
+      const time = new Date();
+      const passengerCount = 1;
+      const requestData = {
+        pickupLocation: pickupLocation,
+        dropoffLocation: dropoffLocation,
+        requestTime: time,
+        passengerCount: passengerCount,
+      };
+      const response = await reqestRide(requestData);
+      if (response) {
+        // navigate to next page
+        navigate("/ride");
+      }
     }
   };
 
