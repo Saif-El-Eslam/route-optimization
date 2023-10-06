@@ -3,17 +3,23 @@
 import React, { useState } from "react";
 import "./SignUp.css";
 import Header from "../../Components/Header/Header";
+import { signUp } from "../../APIFunctions/authCalls";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+
   const [userType, setUserType] = useState("rider");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
+    confirmPassword: "",
     busNumber: "",
     plateNumber: "",
   });
+  const [errors, setErrors] = useState([]);
 
   const handleUserTypeChange = (event) => {
     setUserType(event.target.value);
@@ -29,10 +35,30 @@ const SignUp = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // You can access the selected user type and form data here.
-    console.log("Selected User Type:", userType);
-    console.log("Form Data:", formData);
-    // Implement your sign-up logic here.
+
+    if (formData.password !== formData.confirmPassword) {
+      // add password match error for 2 seconds and then remove it
+      setErrors([...errors, "Passwords do not match"]);
+      setTimeout(() => {
+        setErrors(errors.filter((error) => error !== "Passwords do not match"));
+      }, 3000);
+      return;
+    }
+
+    const response = signUp(userType, formData);
+
+    if (response.status === 201) {
+      // Redirect to login page
+      console.log("Sign up successful");
+      navigate("/");
+    } else {
+      // Display error message
+      setErrors([...errors, response.message]);
+      setTimeout(() => {
+        setErrors(errors.filter((error) => error !== response.message));
+      }, 3000);
+      return;
+    }
   };
 
   return (
@@ -94,6 +120,14 @@ const SignUp = () => {
               onChange={handleInputChange}
               required
             />
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              required
+            />
             {userType === "driver" && (
               <>
                 <input
@@ -114,7 +148,15 @@ const SignUp = () => {
                 />
               </>
             )}
-            <button type="submit">Sign Up</button>
+            {errors &&
+              errors.map((error, i) => (
+                <div key={i} className="error">
+                  {error}
+                </div>
+              ))}
+            <button style={{ marginTop: "2px" }} type="submit">
+              Sign Up
+            </button>
           </div>
         </form>
       </div>
