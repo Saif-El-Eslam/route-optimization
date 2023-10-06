@@ -3,40 +3,81 @@ from flask import Flask, request, jsonify
 from services import *
 from schemas import *
 
-from token_handlers import generate_jwt_token, get_user_by_token
+from auth_handlers import generate_jwt_token, get_user_by_token, hash_password, check_password
 
 app = Flask(__name__)
 
 @app.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
-
-    username = data.get('username')
-    email = data.get('email')
-    phone_number = data.get('phone_number')
-    password = data.get('password')
+    
     role = data.get('role')
-    license_number = data.get('license_number')
+    first_name = data.get('first_name')
+    last_name = data.get('last_name')
+    email = data.get('email')
+    # check if email already exists
+    if get_user_by_email(email):
+        return jsonify({'error': 'there is already an account associated with this email'}), 400
+        
+    password = data.get('password')
+    confirm_password = data.get('confirm_password')
+    if password != confirm_password:
+        return jsonify({'error': 'Passwords do not match'}), 400
+
+    hashed_password = hash_password(password)
+
+    if role == 0:
+        verified = True
+    elif role == 1:
+        verified = False
+        bus_number = data.get('bus_number')
+        plate_number = data.get('plate_number')
+
+    
 
     try: 
-        created_user = create_user({
-            'username': username,
-            'email': email,
-            'phone_number': phone_number,
-            'password': password,
-            'role': role,
-            'license_number': license_number,
-            'verified': False
-        })
+        if role == 0:
+            created_user = create_user({
+                'role': role,
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': email,
+                'password': hashed_password,
+                'verified': verified
+            })
 
-        response_data = {
-            'username': created_user.username,
-            'email': created_user.email,
-            'phone_number': created_user.phone_number,
-            'role': created_user.role,
-            'license_number': created_user.license_number,
-            'verified': created_user.verified
-        }
+            response_data = {
+                'role': created_user.role,
+                'first_name': created_user.first_name,
+                'last_name': created_user.last_name,
+                'email': created_user.email,
+                'verified': created_user.verified
+            }
+        elif role == 1:
+            created_user = create_user({
+                'role': role,
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': email,
+                'password': hashed_password,
+                'verified': verified,
+                'bus_number': bus_number,
+                'plate_number': plate_number
+            })
+
+            response_data = {
+                'role': created_user.role,
+                'first_name': created_user.first_name,
+                'last_name': created_user.last_name,
+                'email': created_user.email,
+                'verified': created_user.verified,
+                'bus_number': created_user.bus_number,
+                'plate_number': created_user.plate_number
+            }
+        else:
+            raise Exception('Invalid role')
+
+        
         return jsonify(response_data), 201
 
     except Exception as e:
@@ -52,7 +93,11 @@ def login():
 
     try:
         user = get_user_by_email(email)
+        
         if user:
+            if not check_password(password, user.password):
+                return jsonify({'error': 'Invalid credentials'}), 401
+
             # Generate JWT token
             token = generate_jwt_token(str(user.id))
 
@@ -76,8 +121,7 @@ def logout():
 
     try:
         user = get_user_by_token(token)
-        print(user)
-        if user:
+        if user.token and user.token != "":
             try:
                 updated_user = update_user(str(user.id), {'token': ''})
             except Exception as e:
@@ -85,7 +129,7 @@ def logout():
 
             return jsonify({'message': 'Logged out successfully'}), 200
         else:
-            return jsonify({'error': 'Invalid token'}), 401
+            return jsonify({'error': 'User is not logged in'}), 400
     
     except Exception as e:
         return jsonify({'error': str(e)}), 400

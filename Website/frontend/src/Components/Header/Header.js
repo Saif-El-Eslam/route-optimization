@@ -5,6 +5,8 @@ import "./Header.css";
 import { Link } from "react-router-dom";
 
 const Header = () => {
+  const url = window.location.href;
+
   return (
     <div className="header-container">
       <Link to="/">
@@ -21,8 +23,10 @@ const Header = () => {
         <Link to="/contact">
           <div className="header-link">Contact</div>
         </Link>
-        <Link to="/signup">
-          <div className="header-link">Sign Up</div>
+        <Link to={url.includes("/signup") ? "/" : "/signup"}>
+          <div className="header-link">
+            {url.includes("/signup") ? "Login In" : "Sign Up"}
+          </div>
         </Link>
       </div>
     </div>

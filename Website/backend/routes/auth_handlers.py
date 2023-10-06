@@ -1,5 +1,6 @@
 import jwt
 import datetime
+import bcrypt
 
 from db.services import get_user_by_id
 
@@ -25,3 +26,12 @@ def get_user_by_token(token):
         return user
     except Exception as e:
         return str(e)
+
+
+salt = bcrypt.gensalt()
+
+def hash_password(password):
+    return bcrypt.hashpw(password.encode('utf-8'), salt)
+
+def check_password(password, hashed_password):
+    return bcrypt.checkpw(password.encode('utf-8'), hashed_password)

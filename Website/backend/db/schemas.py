@@ -32,14 +32,18 @@ class Trip(Document):
 
 
 class User(Document):
-    username = StringField(max_length=50)
-    email = StringField(max_length=100)
-    phone_number = StringField(max_length=15)
-    password = StringField(max_length=20)
-    role = IntField(max_length=2)
+    first_name = StringField(max_length=50, required=True)
+    last_name = StringField(max_length=50, required=True)
+    email = StringField(max_length=100, required=True)
+    # phone_number = StringField(max_length=15)
+    password = StringField(max_length=100, required=True)
+
+    role = IntField(max_length=2, required=True)
     # 0: rider, 1: driver, 2: admin
-    license_number = StringField(max_length=20)
-    verified = BooleanField(default=False)
+    bus_number = StringField(max_length=20, required=(role == 1))
+    plate_number = StringField(max_length=20, required=(role == 1))
+
+    verified = BooleanField()
     token = StringField(max_length=200)
 
 
