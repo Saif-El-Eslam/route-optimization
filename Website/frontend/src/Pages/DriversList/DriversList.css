@@ -57,8 +57,14 @@
   text-align: center;
 }
 
+.content-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .activate-button {
-  background-color: #3f3f3f;
+  background-color: #3a8133;
   color: #ffffff;
   border: none;
   border-radius: 5px;
@@ -67,7 +73,7 @@
 }
 
 .deactivate-button {
-  background-color: #3a8133;
+  background-color: #3f3f3f;
   color: #ffffff;
   border: none;
   border-radius: 5px;

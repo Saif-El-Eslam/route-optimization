@@ -28,11 +28,15 @@ export const login = async (formData) => {
 };
 
 export const logout = async () => {
-  return axios.post("http://127.0.0.1:5000/logout", {
-    headers: {
-      Authorization: `Bearer ${
-        JSON.parse(sessionStorage.getItem("user")).token
-      }`,
-    },
-  });
+  return axios.post(
+    "http://127.0.0.1:5000/logout",
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${
+          JSON.parse(sessionStorage.getItem("user")).token
+        }`,
+      },
+    }
+  );
 };

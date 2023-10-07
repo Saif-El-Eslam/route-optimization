@@ -15,8 +15,8 @@ const Header = () => {
     if (response.status === 200) {
       sessionStorage.removeItem("user");
 
-      if (url.split("/")[3] === "") window.location.reload();
-      else navigate("/");
+      if (url.split("/")[3] !== "") navigate("/");
+      window.location.reload();
     }
   };
 
