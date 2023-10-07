@@ -5,11 +5,28 @@ import RequestRide from "./Pages/Ride/Ride";
 import SignUp from "./Pages/SignUp/SignUp";
 // import Login from "./Pages/Login/Login";
 import NotFound from "./Pages/NotFound/NotFound";
+import Loading from "./Pages/NotFound/Loading";
+import Contact from "./Pages/Contact/Contact";
+import About from "./Pages/About/About";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const user = JSON.parse(sessionStorage.getItem("user"));
-console.log(user);
+
+// add urls to the session storage
+sessionStorage.setItem(
+  "urls",
+  JSON.stringify([
+    "http://localhost:3000",
+    "http://localhost:3000/get-locations",
+    "http://localhost:3000/ride",
+    "http://localhost:3000/signup",
+    "http://localhost:3000/contact",
+    "http://localhost:3000/about",
+    "http://localhost:3000/not-found",
+    "http://localhost:3000/*",
+  ])
+);
 
 function App() {
   return (
@@ -25,7 +42,11 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         {/* <Route path="/login" element={<Login />} /> */}
 
-        <Route path="/*" element={<NotFound />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<About />} />
+
+        <Route path="/not-found" element={<NotFound />} />
+        <Route path="/*" element={<Loading />} />
       </Routes>
     </BrowserRouter>
   );

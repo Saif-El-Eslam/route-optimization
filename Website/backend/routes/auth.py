@@ -93,7 +93,6 @@ def login():
     email = data.get('email')
     password = data.get('password')
 
-    print(email, password)
     try:
         user = get_user_by_email(email)
         

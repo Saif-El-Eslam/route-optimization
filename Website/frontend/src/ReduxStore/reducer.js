@@ -1,7 +1,5 @@
 import * as actions from "./actionTypes";
 
-import { combineReducers } from "redux";
-
 export default function rootReducer(state = {}, action) {
   switch (action.type) {
     case actions.SET_USER:

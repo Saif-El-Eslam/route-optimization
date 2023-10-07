@@ -1,7 +1,6 @@
 import React from "react";
 import "./NotFound.css";
 import Header from "../../Components/Header/Header";
-import { useState } from "react";
 
 const NotFound = () => {
   // direct to home page after 3 seconds
