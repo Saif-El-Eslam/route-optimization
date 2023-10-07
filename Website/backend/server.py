@@ -2,8 +2,8 @@ from flask import Flask
 from flask_cors import CORS
 import sys
 
-sys.path.append("f:/FreeLance/yasser/route-optimization/Website/backend/db")
-sys.path.append("f:/FreeLance/yasser/route-optimization/Website/backend/routes")
+sys.path.append("D:/Projects/route-optimization/Website/backend/routes")
+sys.path.append("D:/Projects/route-optimization/Website/backend/db")
 
 app = Flask(__name__)
 CORS(app)

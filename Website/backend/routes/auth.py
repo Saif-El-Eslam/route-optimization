@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 from services import *
 from schemas import *
@@ -6,6 +7,7 @@ from schemas import *
 from auth_handlers import generate_jwt_token, get_user_by_token, hash_password, check_password
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/signup', methods=['POST'])
 def signup():

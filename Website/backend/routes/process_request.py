@@ -1,11 +1,12 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from datetime import datetime
 from db_connection import db
 from schemas import *
 from services import *
 
 app = Flask(__name__)
-
+CORS(app)
 # Simulated data for bus routes and buses
 bus_routes = {
     "Route A": ["Bus 101", "Bus 102"],

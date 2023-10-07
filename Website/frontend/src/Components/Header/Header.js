@@ -25,7 +25,7 @@ const Header = () => {
         </Link>
         <Link to={url.includes("/signup") ? "/" : "/signup"}>
           <div className="header-link">
-            {url.includes("/signup") ? "Login In" : "Sign Up"}
+            {url.includes("/signup") ? "Login" : "Sign Up"}
           </div>
         </Link>
       </div>
