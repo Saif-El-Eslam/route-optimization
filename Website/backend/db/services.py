@@ -14,6 +14,9 @@ def get_user_by_id(user_id):
 def get_user_by_email(email):
     return User.objects(email=email).first()
 
+def get_users_by_role(role):
+    return User.objects(role=role)
+
 def update_user(user_id, data):
     user = get_user_by_id(user_id)
     if user:

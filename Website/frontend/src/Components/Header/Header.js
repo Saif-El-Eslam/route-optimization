@@ -1,6 +1,6 @@
 import React from "react";
 import "./Header.css";
-
+import { logout } from "../../APIFunctions/authCalls";
 // import Link
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,16 @@ const Header = () => {
   const navigate = useNavigate();
   const url = window.location.href;
   const user = JSON.parse(sessionStorage.getItem("user"));
+
+  const handleLogout = async () => {
+    const response = await logout();
+    if (response.status === 200) {
+      sessionStorage.removeItem("user");
+
+      if (url.split("/")[3] === "") window.location.reload();
+      else navigate("/");
+    }
+  };
 
   return (
     <div className="header-container">
@@ -36,15 +46,7 @@ const Header = () => {
         </Link>
         {user ? (
           <Link to="/">
-            <div
-              className="header-link"
-              onClick={() => {
-                sessionStorage.removeItem("user");
-
-                if (url.split("/")[3] === "") window.location.reload();
-                else navigate("/");
-              }}
-            >
+            <div className="header-link" onClick={handleLogout}>
               Logout
             </div>
           </Link>

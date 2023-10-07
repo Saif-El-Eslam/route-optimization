@@ -40,7 +40,7 @@ class User(Document):
 
     role = IntField(max_length=2, required=True)
     # 0: rider, 1: driver, 2: admin
-    bus_number = StringField(max_length=20, required=(role == 1))
+    bus_number = StringField(max_length=20)
     license_number = StringField(max_length=20, required=(role == 1))
 
     verified = BooleanField()

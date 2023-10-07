@@ -7,7 +7,7 @@ from schemas import *
 from auth_handlers import generate_jwt_token, get_user_by_token, hash_password, check_password
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -34,8 +34,6 @@ def signup():
         verified = False
         bus_number = data.get('bus_number')
         license_number = data.get('license_number')
-
-    
 
     try: 
         if role == 0:

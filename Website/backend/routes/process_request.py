@@ -6,7 +6,7 @@ from schemas import *
 from services import *
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
 # Simulated data for bus routes and buses
 bus_routes = {
     "Route A": ["Bus 101", "Bus 102"],

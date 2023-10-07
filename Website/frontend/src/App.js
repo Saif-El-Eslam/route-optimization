@@ -8,6 +8,7 @@ import NotFound from "./Pages/NotFound/NotFound";
 import Loading from "./Pages/NotFound/Loading";
 import Contact from "./Pages/Contact/Contact";
 import About from "./Pages/About/About";
+import DriversList from "./Pages/DriversList/DriversList";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -25,6 +26,7 @@ sessionStorage.setItem(
     "http://localhost:3000/about",
     "http://localhost:3000/not-found",
     "http://localhost:3000/*",
+    "http://localhost:3000/drivers-list",
   ])
 );
 
@@ -37,6 +39,9 @@ function App() {
           <Route path="/get-locations" element={<GetLocations />} />
         )}
         {user?.role === 0 && <Route path="/ride" element={<RequestRide />} />}
+        {user?.role === 2 && (
+          <Route path="/drivers-list" element={<DriversList />} />
+        )}
         {/* <Route path="/rider/:id" element={<Rider />} />
         <Route path="/driver/:id" element={<Driver />} /> */}
         <Route path="/signup" element={<SignUp />} />
