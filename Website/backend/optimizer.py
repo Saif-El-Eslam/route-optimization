@@ -17,14 +17,12 @@ MAPBOX_TOKEN = "pk.eyJ1IjoiYWhtZWR5MTU1MjAwIiwiYSI6ImNsamw4cDM3NDAzejAzZG1uc2Y4M
 
 
 # Input: list of locations
-
-
 def VRP_pickup_dropoff_TW(
-    df, max_pickup_delay=30, max_dropoff_delay=30, waiting_time=1, capacity=24
+    locations, time_window, max_pickup_delay=30, max_dropoff_delay=30, waiting_time=1, capacity=24
 ):
     """Entry point of the program."""
     data = create_data_model(
-        df, max_pickup_delay, max_dropoff_delay, waiting_time, capacity
+        locations, time_window, max_pickup_delay, max_dropoff_delay, waiting_time, capacity
     )
     manager = pywrapcp.RoutingIndexManager(
         len(data["distance_matrix"]), data["num_vehicles"], data["depot"]
@@ -73,7 +71,8 @@ def VRP_pickup_dropoff_TW(
         routing.AddVariableMinimizedByFinalizer(
             time_dimension.CumulVar(routing.Start(i))
         )
-        routing.AddVariableMinimizedByFinalizer(time_dimension.CumulVar(routing.End(i)))
+        routing.AddVariableMinimizedByFinalizer(
+            time_dimension.CumulVar(routing.End(i)))
 
     # pickup and delivery
     for request in data["pickups_deliveries"]:
@@ -81,7 +80,8 @@ def VRP_pickup_dropoff_TW(
         delivery_index = manager.NodeToIndex(request[1])
         routing.AddPickupAndDelivery(pickup_index, delivery_index)
         routing.solver().Add(
-            routing.VehicleVar(pickup_index) == routing.VehicleVar(delivery_index)
+            routing.VehicleVar(
+                pickup_index) == routing.VehicleVar(delivery_index)
         )
         routing.solver().Add(
             time_dimension.CumulVar(pickup_index)
@@ -94,7 +94,8 @@ def VRP_pickup_dropoff_TW(
         from_node = manager.IndexToNode(from_index)
         return data["demands"][from_node]
 
-    demand_callback_index = routing.RegisterUnaryTransitCallback(demand_callback)
+    demand_callback_index = routing.RegisterUnaryTransitCallback(
+        demand_callback)
     routing.AddDimensionWithVehicleCapacity(
         demand_callback_index,
         0,  # null capacity slack
@@ -116,16 +117,17 @@ def VRP_pickup_dropoff_TW(
     if solution:
         # print(routes)
         # print ("Time windows", data["time_windows"])
-        routes = get_routes(solution, routing, manager)
-        delays = get_delays(data, manager, routing, solution)
-        return routes, get_total_distance(data, manager, routing, solution), delays
+        # routes = get_routes(solution, routing, manager)
+        # delays = get_delays(data, manager, routing, solution)
+        # return routes, get_total_distance(data, manager, routing, solution), delays
+        return "Solution found."
     else:
         # print("No solution found.")
         return [], 0, []
 
 
 def create_data_model(
-    locations, max_pickup_delay, max_dropoff_delay, waiting_time=1, capacity=24
+    locations, time_window, max_pickup_delay, max_dropoff_delay, waiting_time=1, capacity=24
 ):
     """Stores the data for the problem."""
     data = {}
@@ -135,7 +137,8 @@ def create_data_model(
     ]  # TODO: could pass it to the function or the locations should be in order (pickup, dropoff, pickup, dropoff, ...)
     data["num_vehicles"] = 1
     data["depot"] = 0
-    timematrix = [[int(t / 40 * 60) for t in row] for row in data["distance_matrix"]]
+    timematrix = [[int(t / 40 * 60) for t in row]
+                  for row in data["distance_matrix"]]
 
     # add waiting time to all time matrix values except the zero values
     for i in range(len(timematrix)):
@@ -144,13 +147,12 @@ def create_data_model(
                 timematrix[i][j] += waiting_time
 
     data["time_matrix"] = timematrix
-    data["time_windows"] = get_time_windows(
-        df, timematrix, max_pickup_delay, max_dropoff_delay
-    )
+    data["time_windows"] = time_window
     # demands is 0,1,-1,1,-1,1,-1
     data["demands"] = [0] + [1, -1] * len(locations)
     # capacity is 20 for all vehicles
-    data["vehicle_capacities"] = [capacity for i in range(data["num_vehicles"])]
+    data["vehicle_capacities"] = [
+        capacity for i in range(data["num_vehicles"])]
     # print(data)
     return data
 
@@ -175,7 +177,8 @@ def haversine(lat1, lon1, lat2, lon2):
     delta_lon = lon2_rad - lon1_rad
     a = (
         math.sin(delta_lat / 2) ** 2
-        + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(delta_lon / 2) ** 2
+        + math.cos(lat1_rad) * math.cos(lat2_rad) *
+        math.sin(delta_lon / 2) ** 2
     )
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     distance = 6371 * c  # Radius of the Earth in kilometers
@@ -201,41 +204,6 @@ def get_direction_matrix_arc(locations):
     return distance_matrix  # in kilometers
 
 
-def get_time_windows(df, timematrix, max_pickup_delay, max_dropoff_delay):
-    """
-    Get the time windows from the dataframe
-    :param df: the dataframe
-    :return: a list of time windows
-    """
-    # time window list for a pickup is (request time, request time + 10)
-    # time window list for a delivery is (request time + time matrix[pickup][delivery], request time + time matrix[pickup][delivery] + 10)
-    time_windows = []
-    # append the time window for the first pickup (depot)
-    start_time = df["PickUp Time"].iloc[0]
-    time_windows.append((0, 0))  # the depot has no time window
-    for i in range(len(df)):
-        time_windows.append(
-            (
-                df["PickUp Time"].iloc[i] - start_time,
-                df["PickUp Time"].iloc[i] - start_time + max_pickup_delay,
-            )
-        )
-        # time_windows.append((df["PickUp Time"].iloc[i] + timematrix[2*i+1][2*i+2] - start_time, df["PickUp Time"].iloc[i] + timematrix[2*i+1][2*i+2] - start_time + 15))
-        # TODO: the next line solved the problem, we can add it to trips causing problems
-        time_windows.append(
-            (
-                df["PickUp Time"].iloc[i]
-                + timematrix[2 * i + 1][2 * i + 2]
-                - start_time,
-                df["PickUp Time"].iloc[i]
-                + timematrix[2 * i + 1][2 * i + 2]
-                - start_time
-                + max_dropoff_delay,
-            )
-        )
-    return time_windows
-
-
 def calculate_time_between_locations(loc1, loc2):
     # Make a directions request
     directions_result = gmaps.directions(loc1, loc2, mode="driving")
@@ -252,3 +220,11 @@ def calculate_time_between_locations(loc1, loc2):
         return nx.shortest_path_length(G, loc1, loc2, weight="weight")
     except nx.NetworkXNoPath:
         return float("inf")  # Return infinity if no path exists
+
+
+def main():
+    print("main")
+
+
+if __name__ == "__main__":
+    main()
