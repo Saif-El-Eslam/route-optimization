@@ -1,11 +1,21 @@
 import React from "react";
 import "./Ride.css";
 import Header from "../../Components/Header/Header";
-import { getRide } from "../../ReduxStore/actions";
 import { useState } from "react";
 
 const RequestRide = () => {
-  const [rideInfo, setRideInfo] = useState(getRide());
+  const [rideInfo, setRideInfo] = useState({
+    pickupLocation: {
+      address: "123 Main St San Diego CA",
+      coordinates: [-117.161084, 32.715736],
+    },
+    dropoffLocation: {
+      address: "456 Main St San Diego CA",
+      coordinates: [-117.161084, 32.715736],
+    },
+    time: "ASAP",
+    passengerCount: 1,
+  });
 
   console.log(rideInfo);
 

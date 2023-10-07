@@ -19,8 +19,8 @@ def signup():
     email = data.get('email')
     # check if email already exists
     if get_user_by_email(email):
-        return jsonify({'error': 'there is already an account associated with this email'}), 400
-        
+        return jsonify({'error': 'Email already exists'}), 400
+
     password = data.get('password')
     confirm_password = data.get('confirm_password')
     if password != confirm_password:
@@ -33,7 +33,7 @@ def signup():
     elif role == 1:
         verified = False
         bus_number = data.get('bus_number')
-        plate_number = data.get('plate_number')
+        license_number = data.get('license_number')
 
     
 
@@ -64,7 +64,7 @@ def signup():
                 'password': hashed_password,
                 'verified': verified,
                 'bus_number': bus_number,
-                'plate_number': plate_number
+                'license_number': license_number
             })
 
             response_data = {
@@ -74,7 +74,7 @@ def signup():
                 'email': created_user.email,
                 'verified': created_user.verified,
                 'bus_number': created_user.bus_number,
-                'plate_number': created_user.plate_number
+                'license_number': created_user.license_number
             }
         else:
             raise Exception('Invalid role')
@@ -93,12 +93,16 @@ def login():
     email = data.get('email')
     password = data.get('password')
 
+    print(email, password)
     try:
         user = get_user_by_email(email)
         
         if user:
             if not check_password(password, user.password):
                 return jsonify({'error': 'Invalid credentials'}), 401
+
+            if user.role == 1 and not user.verified:
+                return jsonify({'error': 'Driver is not verified yet'}), 401
 
             # Generate JWT token
             token = generate_jwt_token(str(user.id))
@@ -108,7 +112,12 @@ def login():
             except Exception as e:
                 return jsonify({'error': str(e)}), 400
 
-            return jsonify({'token': token}), 200
+            return jsonify({
+                'token': token,
+                'role': updated_user.role,
+                'first_name': updated_user.first_name,
+                'last_name': updated_user.last_name,
+            }), 200
         else:
             return jsonify({'error': 'Invalid credentials'}), 401
 

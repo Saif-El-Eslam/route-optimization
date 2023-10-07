@@ -1,21 +1,27 @@
 import * as actions from "./actionTypes";
 
-// import { combineReducers } from "redux";
+import { combineReducers } from "redux";
 
-// function userReducer(state = {}, action) {
-//   switch (action.type) {
-//     case "SET_USER":
-//       return {
-//         ...state,
-//         user: action.payload,
-//       };
-//     default:
-//       return state;
-//   }
-// }
-
-export default function rideReducer(state = {}, action) {
+export default function rootReducer(state = {}, action) {
   switch (action.type) {
+    case actions.SET_USER:
+      return {
+        ...state,
+        user: action.payload,
+      };
+    case actions.UPDATE_USER:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.payload,
+        },
+      };
+    case actions.REMOVE_USER:
+      return {
+        ...state,
+        user: {},
+      };
     case actions.SET_RIDE:
       return {
         ...state,
@@ -33,8 +39,3 @@ export default function rideReducer(state = {}, action) {
       return state;
   }
 }
-
-// export default combineReducers({
-//   userReducer,
-//   rideReducer,
-// });

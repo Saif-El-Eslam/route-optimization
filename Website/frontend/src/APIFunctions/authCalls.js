@@ -12,17 +12,17 @@ export const signUp = async (userType, formData) => {
 
   if (userType === "driver") {
     user.bus_number = formData.busNumber;
-    user.plate_number = formData.plateNumber;
+    user.license_number = formData.licenseNumber;
   }
 
-  axios
-    .post("http://127.0.0.1:5000/signup", user)
-    .then((res) => {
-      console.log(res);
-      return res;
-    })
-    .catch((error) => {
-      console.log(error);
-      return error;
-    });
+  return axios.post("http://127.0.0.1:5000/signup", user);
+};
+
+export const login = async (formData) => {
+  const user = {
+    email: formData.email,
+    password: formData.password,
+  };
+
+  return axios.post("http://127.0.0.1:5000/login", user);
 };

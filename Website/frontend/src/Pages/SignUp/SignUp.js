@@ -17,7 +17,7 @@ const SignUp = () => {
     password: "",
     confirmPassword: "",
     busNumber: "",
-    plateNumber: "",
+    licenseNumber: "",
   });
   const [errors, setErrors] = useState([]);
 
@@ -45,20 +45,20 @@ const SignUp = () => {
       return;
     }
 
-    const response = signUp(userType, formData);
-
-    if (response.status === 201) {
-      // Redirect to login page
-      console.log("Sign up successful");
-      navigate("/");
-    } else {
-      // Display error message
-      setErrors([...errors, response.message]);
-      setTimeout(() => {
-        setErrors(errors.filter((error) => error !== response.message));
-      }, 3000);
-      return;
-    }
+    signUp(userType, formData)
+      .then((response) => {
+        navigate("/");
+      })
+      .catch((error) => {
+        if (error.response) {
+          setErrors([...errors, error.response.data.error]);
+          setTimeout(() => {
+            setErrors(
+              errors.filter((error) => error !== error.response.data.error)
+            );
+          }, 3000);
+        }
+      });
   };
 
   return (
@@ -140,9 +140,9 @@ const SignUp = () => {
                 />
                 <input
                   type="text"
-                  name="plateNumber"
-                  placeholder="Plate Number"
-                  value={formData.plateNumber}
+                  name="licenseNumber"
+                  placeholder="License Number"
+                  value={formData.licenseNumber}
                   onChange={handleInputChange}
                   required
                 />

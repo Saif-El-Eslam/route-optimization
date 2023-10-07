@@ -3,7 +3,6 @@ import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "./LocationPicker.css";
 import { useNavigate } from "react-router-dom";
-import { setRide } from "../../ReduxStore/actions";
 import { reqestRide } from "../../APIFunctions/DBFunctions.js";
 
 mapboxgl.accessToken =
@@ -104,13 +103,6 @@ const LocationPicker = ({
       // } catch (error) {
       //   console.error("Error:", error);
       // }
-      setRide({
-        pickupLocation,
-        dropoffLocation,
-        // time to string
-        time: new Date().toLocaleString(),
-        passengerCount: 1,
-      });
       const time = new Date();
       const passengerCount = 1;
       const requestData = {

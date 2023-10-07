@@ -1,4 +1,4 @@
-import rideStore from "./store";
+import rootStore from "./store";
 import * as actions from "./actionTypes";
 
 // initialize rideStore with a test ride
@@ -16,21 +16,53 @@ setRide({
 });
 
 function setRide(ride) {
-  rideStore.dispatch({
+  rootStore.dispatch({
     type: actions.SET_RIDE,
     payload: ride,
   });
 }
 
 function getRide() {
-  return rideStore.getState().ride;
+  return rootStore.getState().ride;
 }
 
 function updateRide(ride) {
-  rideStore.dispatch({
+  rootStore.dispatch({
     type: actions.UPDATE_RIDE,
     payload: ride,
   });
 }
 
-export { setRide, updateRide, getRide };
+function setUser(user) {
+  rootStore.dispatch({
+    type: actions.SET_USER,
+    payload: user,
+  });
+}
+
+function getUser() {
+  return rootStore.getState().user;
+}
+
+function updateUser(user) {
+  rootStore.dispatch({
+    type: actions.UPDATE_USER,
+    payload: user,
+  });
+}
+
+function removeUser() {
+  rootStore.dispatch({
+    type: actions.REMOVE_USER,
+  });
+}
+
+export {
+  setRide,
+  updateRide,
+  getRide,
+  setUser,
+  getUser,
+  updateUser,
+  removeUser,
+};

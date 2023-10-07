@@ -1,0 +1,27 @@
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.not-found-header {
+  font-size: 10rem;
+  font-weight: 700;
+  color: #f44336;
+}
+
+.not-found-subheader {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #f44336;
+}
+
+.not-found-text {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #ff9e97;
+
+  margin-top: 50px;
+}
