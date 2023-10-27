@@ -4,15 +4,7 @@ from datetime import datetime
 from schemas import *
 from services import *
 
-app = Flask(__name__)
-CORS(app, supports_credentials=True)
 process_request_bp = Blueprint("process_request_bp", __name__)
-
-# Simulated data for bus routes and buses
-bus_routes = {
-    "Route A": ["Bus 101", "Bus 102"],
-    "Route B": ["Bus 201", "Bus 202"],
-}
 
 
 # Define a route to handle incoming requests
