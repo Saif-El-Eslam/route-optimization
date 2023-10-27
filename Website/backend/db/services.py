@@ -8,14 +8,18 @@ def create_user(data):
     user.save()
     return user
 
+
 def get_user_by_id(user_id):
     return User.objects(id=user_id).first()
+
 
 def get_user_by_email(email):
     return User.objects(email=email).first()
 
+
 def get_users_by_role(role):
     return User.objects(role=role)
+
 
 def update_user(user_id, data):
     user = get_user_by_id(user_id)
@@ -24,6 +28,7 @@ def update_user(user_id, data):
             setattr(user, key, value)
         user.save()
     return user
+
 
 def delete_user(user_id):
     user = get_user(user_id)
@@ -122,6 +127,18 @@ def create_ride_request(data):
 
 def get_ride_request(ride_request_id):
     return RideRequest.objects(id=ride_request_id).first()
+
+
+def get_ride_requests_by_rider_id(rider_id):
+    return RideRequest.objects(rider_id=rider_id)
+
+
+def get_ride_requests_by_status(status):
+    return RideRequest.objects(status=status)
+
+
+def get_all_ride_requests():
+    return RideRequest.objects()
 
 
 def update_ride_request(ride_request_id, data):
