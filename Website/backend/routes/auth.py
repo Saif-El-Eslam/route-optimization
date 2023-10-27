@@ -1,15 +1,13 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask import Blueprint, request, jsonify
 
 from services import *
 from schemas import *
 
 from auth_handlers import generate_jwt_token, get_user_by_token, hash_password, check_password
 
-app = Flask(__name__)
-CORS(app, supports_credentials=True)
+auth_bp = Blueprint('auth_bp', __name__)
 
-@app.route('/signup', methods=['POST'])
+@auth_bp.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
     
@@ -84,7 +82,7 @@ def signup():
         return jsonify({'error': str(e)}), 400
 
 
-@app.route('/login', methods=['POST'])
+@auth_bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
 
@@ -93,7 +91,6 @@ def login():
 
     try:
         user = get_user_by_email(email)
-        
         if user:
             if not check_password(password, user.password):
                 return jsonify({'error': 'Invalid credentials'}), 401
@@ -122,7 +119,7 @@ def login():
         return jsonify({'error': str(e)}), 400
 
 
-@app.route('/logout', methods=['POST'])
+@auth_bp.route('/logout', methods=['POST'])
 def logout():
     bearer_token = request.headers.get('Authorization')
     token = bearer_token.split(' ')[1]

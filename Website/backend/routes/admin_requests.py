@@ -1,14 +1,13 @@
-from flask import Flask, request, jsonify
+from flask import Blueprint, request, jsonify
 from flask_cors import CORS
 
 from services import *
 from schemas import *
 from auth_handlers import get_user_by_token
 
-app = Flask(__name__)
-CORS(app, supports_credentials=True)
+admin_requests_bp = Blueprint('admin_requests_bp', __name__)
 
-@app.route('/not-verified-users', methods=['GET'])
+@admin_requests_bp.route('/not-verified-users', methods=['GET'])
 def get_not_verified_users():
     bearer_token = request.headers.get('Authorization')
     token = bearer_token.split(' ')[1]
@@ -40,7 +39,7 @@ def get_not_verified_users():
         return jsonify({'error': str(e)}), 400
 
     
-@app.route('/verify-user', methods=['POST'])
+@admin_requests_bp.route('/verify-user', methods=['POST'])
 def verify_user():
     bearer_token = request.headers.get('Authorization')
     token = bearer_token.split(' ')[1]
