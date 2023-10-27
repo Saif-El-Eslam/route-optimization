@@ -7,29 +7,35 @@ from mongoengine import (
     DecimalField,
     ListField,
     BooleanField,
+    ObjectIdField,
+    DictField,
+
 )
 
 
 class Bus(Document):
-    bus_id = StringField(required=True, max_length=20)
-    capacity = IntField()
-    current_location = ListField(DecimalField(precision=6))
-    route = ListField(ListField(DecimalField(precision=6)))
-    time_windows = ListField(ListField(IntField()))
-    assigned_trips = ListField(StringField(max_length=100))
-    status = StringField(max_length=20)
-    depot = ListField(DecimalField(precision=6))
+    bus_id = StringField(required=True, max_length=20)  # license plate
+    capacity = IntField()  # number of seats
+    current_location = ListField(DecimalField(precision=6))  # [long, lat]
+    locations = ListField(DictField(
+        trip_id=ObjectIdField(required=True), action=StringField(choices=["pickup", "dropoff"], required=True),
+        coordinates=ListField(DecimalField(precision=6))))  # list of trip ids, pick/drop and coordinates [(id, "pickup", [long, lat]), (id, "dropoff", [long, lat])]
+    route = ListField(IntField())  # list of location ids 1->2->3->4->5->1
+    time_windows = ListField(ListField(IntField()))  # list of time windows
+    assigned_trips = ListField(ObjectIdField())  # list of trip ids
+    status = StringField(max_length=20)  # "Active" or "Inactive"
+    depot = ListField(DecimalField(precision=6))  # [long, lat]
 
 
 class Trip(Document):
-    bus_id = StringField(max_length=50)
-    rider_id = StringField(max_length=50)
-    request_time = DateTimeField()
-    pickup_time = DateTimeField()
-    arrival_time = DateTimeField()
-    pickup_location = ListField(DecimalField(precision=6))
-    dropoff_location = ListField(DecimalField(precision=6))
-    status = StringField(max_length=20)
+    bus_id = StringField(max_length=50)  # license plate
+    rider_id = StringField(max_length=50)  # rider id
+    request_time = DateTimeField()  # time of request
+    pickup_time = DateTimeField()  # time of pickup
+    arrival_time = DateTimeField()  # time of arrival
+    pickup_location = ListField(DecimalField(precision=6))  # [long, lat]
+    dropoff_location = ListField(DecimalField(precision=6))  # [long, lat]
+    status = StringField(max_length=20)  # "Pending", "Active", "Completed"
 
 
 class User(Document):
@@ -38,9 +44,8 @@ class User(Document):
     email = StringField(max_length=100, required=True)
     # phone_number = StringField(max_length=15)
     password = StringField(max_length=100, required=True)
-
-    role = IntField(max_length=2, required=True)
     # 0: rider, 1: driver, 2: admin
+    role = IntField(max_length=2, required=True)
     bus_number = StringField(max_length=20)
     license_number = StringField(max_length=20, required=(role == 1))
 

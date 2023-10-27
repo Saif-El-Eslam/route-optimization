@@ -16,11 +16,85 @@ gmaps = googlemaps.Client(key="AIzaSyCKNRwMEYukzka5pRhiPL8LrJG_U4qlW2A")
 MAPBOX_TOKEN = "pk.eyJ1IjoiYWhtZWR5MTU1MjAwIiwiYSI6ImNsamw4cDM3NDAzejAzZG1uc2Y4MGJ4aWIifQ.9z0OvMdr2pISeiDFf4ufTw"
 
 
+def get_total_distance(data, manager, routing, solution):
+    """Calculates and returns the total distance of all routes."""
+    total_distance = 0
+    for vehicle_id in range(data["num_vehicles"]):
+        index = routing.Start(vehicle_id)
+        route_distance = 0
+        while not routing.IsEnd(index):
+            previous_index = index
+            index = solution.Value(routing.NextVar(index))
+            route_distance += routing.GetArcCostForVehicle(
+                previous_index, index, vehicle_id)
+        total_distance += route_distance
+    return total_distance
+
+
+def get_routes(solution, routing, manager):
+    """Get vehicle routes from a solution and store them in an array."""
+    routes = []
+    for route_nbr in range(routing.vehicles()):
+        index = routing.Start(route_nbr)
+        route = [manager.IndexToNode(index)]
+        while not routing.IsEnd(index):
+            index = solution.Value(routing.NextVar(index))
+            route.append(manager.IndexToNode(index))
+        routes.append(route)
+    return routes
+
+
+def get_delays(data, manager, routing, solution):
+    """Get vehicle routes from a solution and store them in an array."""
+    # print("Time Matrix:", data["time_matrix"])
+    # print("Time Window:", data["time_windows"])
+    delays = []
+    time_dimension = routing.GetDimensionOrDie('time')
+    for route_nbr in range(routing.vehicles()):
+        index = routing.Start(route_nbr)
+        route = get_routes(solution, routing, manager)[route_nbr]
+        while not routing.IsEnd(index):
+            time_var = time_dimension.CumulVar(index)
+            delays.append((solution.Min(time_var), solution.Max(time_var)))
+            index = solution.Value(routing.NextVar(index))
+        # print("delays",delays) #these are the arrival times corresponding to the route sequence
+        # FIXME: the following code doesn't seem to be right
+
+        # rearrange delays according to route
+        zipped = zip(route, delays)
+        zipped = sorted(zipped, key=lambda x: x[0])
+        sorted_delays = [pair[1] for pair in zipped]
+        # print("sorted",sorted_delays)
+        output_delays = []
+        for i in range(len(sorted_delays)):
+            output_delays.append(
+                sorted_delays[i][0] - data["time_windows"][i][0])
+
+        # pop first element to get rid of depot
+        output_delays.pop(0)
+        # print("Delays:", output_delays)
+
+    return output_delays
+
+
 # Input: list of locations
 def VRP_pickup_dropoff_TW(
     locations, time_window, max_pickup_delay=30, max_dropoff_delay=30, waiting_time=1, capacity=24
 ):
-    """Entry point of the program."""
+    """Entry point of the program.
+    Args:
+        locations: list of locations where each location is a tuple of (latitude, longitude)
+        time_window: list of time windows where each time window is a tuple of (start_time, end_time)
+        max_pickup_delay: maximum delay for pickup in minutes
+        max_dropoff_delay: maximum delay for dropoff in minutes
+        waiting_time: waiting time in minutes
+        capacity: capacity of the vehicle
+    Returns:
+        routes: list of routes where each route is a list of locations
+        total_distance: total distance of the routes in kilometers
+        delays: list of delays for each location in minutes
+    """
+
     data = create_data_model(
         locations, time_window, max_pickup_delay, max_dropoff_delay, waiting_time, capacity
     )
@@ -109,31 +183,32 @@ def VRP_pickup_dropoff_TW(
         routing_enums_pb2.FirstSolutionStrategy.PARALLEL_CHEAPEST_INSERTION
     )
     # time limit
-    search_parameters.time_limit.seconds = 30
+    # search_parameters.time_limit.seconds = 30
     # solutions limit
     # search_parameters.solution_limit = 100
-
+    print("Start solving...")
     solution = routing.SolveWithParameters(search_parameters)
     if solution:
         # print(routes)
         # print ("Time windows", data["time_windows"])
-        # routes = get_routes(solution, routing, manager)
-        # delays = get_delays(data, manager, routing, solution)
-        # return routes, get_total_distance(data, manager, routing, solution), delays
-        return "Solution found."
+        routes = get_routes(solution, routing, manager)
+        delays = get_delays(data, manager, routing, solution)
+        return routes, get_total_distance(data, manager, routing, solution), delays
+        # print("Solution found.")
+        # return [], 0, []
     else:
-        # print("No solution found.")
+        print("No solution found.")
         return [], 0, []
 
 
 def create_data_model(
-    locations, time_window, max_pickup_delay, max_dropoff_delay, waiting_time=1, capacity=24
+    locations, time_window, max_pickup_delay=30, max_dropoff_delay=30, waiting_time=1, capacity=24
 ):
     """Stores the data for the problem."""
     data = {}
     data["distance_matrix"] = get_direction_matrix_arc(locations)
     data["pickups_deliveries"] = [
-        [i * 2 + 1, i * 2 + 2] for i in range(len(locations))
+        [i * 2 + 1, i * 2 + 2] for i in range(int(len(locations)/2))
     ]  # TODO: could pass it to the function or the locations should be in order (pickup, dropoff, pickup, dropoff, ...)
     data["num_vehicles"] = 1
     data["depot"] = 0
@@ -149,11 +224,11 @@ def create_data_model(
     data["time_matrix"] = timematrix
     data["time_windows"] = time_window
     # demands is 0,1,-1,1,-1,1,-1
-    data["demands"] = [0] + [1, -1] * len(locations)
+    data["demands"] = [0] + [1, -1] * int(len(locations) / 2)
     # capacity is 20 for all vehicles
     data["vehicle_capacities"] = [
         capacity for i in range(data["num_vehicles"])]
-    # print(data)
+    print(data)
     return data
 
 
@@ -200,7 +275,11 @@ def get_direction_matrix_arc(locations):
             lat1, lon1 = locations[i]
             lat2, lon2 = locations[j]
             distance = haversine(lat1, lon1, lat2, lon2)
-            distance_matrix[i][j] = int(distance)
+            # for the first point in the row,make it 0
+            if j == 0:
+                distance_matrix[i][j] = 0
+            else:
+                distance_matrix[i][j] = int(distance)
     return distance_matrix  # in kilometers
 
 
@@ -223,7 +302,39 @@ def calculate_time_between_locations(loc1, loc2):
 
 
 def main():
-    print("main")
+    # input : old route, time window
+    # output : new route, total distance, delays
+    # depot = [30.77305678190685, 30.813048152000523]
+    # 1 :30.795700945482718,30.819262082140266
+    # 2: 30.8140702192498, 30.819690604927697
+    # 3: 30.77490006380151, 30.81398531217546
+    # 4:  30.873275348454126, 30.811269362683074
+    bus_test = {
+        "bus_id": "2",
+        "capacity": 1,
+        "current_location": [30.77305678190685, 30.813048152000523],
+        "locations": [(1, "pickup", [30.795700945482718, 30.819262082140266]),
+                      (2, "dropoff", [30.8140702192498, 30.819690604927697]),
+                      (3, "pickup", [30.77490006380151, 30.81398531217546]),
+                      (4, "dropoff", [30.873275348454126, 30.811269362683074])],
+        "route": [],
+        "time_windows": [[0, 0], [0, 1440], [0, 1440], [0, 1440], [0, 1440]],
+        "assigned_trips": [],
+        "status": "Active",
+        "depot": [30.77305678190685, 30.813048152000523]
+    }
+    locations = [bus_test["current_location"]] + [location[2]
+                                                  for location in bus_test["locations"]]
+    time_window = bus_test["time_windows"]
+    max_pickup_delay = 15
+    max_dropoff_delay = 15
+    waiting_time = 1
+    capacity = 24
+
+    result = VRP_pickup_dropoff_TW(
+        locations, time_window, max_pickup_delay, max_dropoff_delay, waiting_time, capacity
+    )
+    print(result)
 
 
 if __name__ == "__main__":
