@@ -8,9 +8,7 @@ process_request_bp = Blueprint("process_request_bp", __name__)
 
 
 # Define a route to handle incoming requests
-
-
-@app.route("/process_request", methods=["POST"])
+@process_request_bp.route("/process_request", methods=["POST"])
 def process_request():
     try:
         # Get data from the JSON request
