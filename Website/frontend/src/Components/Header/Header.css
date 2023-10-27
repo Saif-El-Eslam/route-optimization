@@ -3,6 +3,8 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  /* wrap */
+  flex-wrap: wrap;
 
   /* style the position */
   position: absolute;
@@ -69,5 +71,15 @@ a {
   /* style the active */
   &:active {
     transform: scale(0.9);
+  }
+}
+
+/* if the page width less than 1000px */
+@media screen and (max-width: 1000px) {
+  .header-container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
   }
 }

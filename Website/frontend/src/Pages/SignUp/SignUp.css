@@ -83,3 +83,11 @@ button:hover {
   margin-top: 5px;
   margin-bottom: 5px;
 }
+
+/* when width is less than 1000px */
+@media screen and (max-width: 1000px) {
+  .signup-container {
+    max-width: 70%;
+    margin-left: 10%;
+  }
+}

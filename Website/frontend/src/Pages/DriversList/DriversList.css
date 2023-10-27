@@ -5,6 +5,7 @@
   /* justify-content: center; */
   margin-top: 70px;
 
+  width: 100%;
   height: 90vh;
 }
 
@@ -88,4 +89,46 @@
 .activate-button:active,
 .deactivate-button:active {
   transform: scale(0.95);
+}
+
+/* if the page width less than 1000px */
+@media screen and (max-width: 1000px) {
+  .drivers-list {
+    margin-top: 150px;
+    font-weight: 600;
+    height: 80vh;
+  }
+
+  /* hide driver list header */
+  .drivers-list-header {
+    display: none;
+  }
+  .drivers-list-container {
+    width: 85%;
+    min-width: 0;
+    max-height: 1000px;
+    padding: 10px;
+    overflow-y: scroll;
+  }
+  .drivers-list-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .content-card {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    gap: 10px;
+    text-align: center;
+    background-color: rgba(18, 17, 61, 0.1);
+    border-radius: 10px;
+  }
+
+  .activate-button {
+    width: 80%;
+  }
+
+  .deactivate-button {
+    width: 80%;
+  }
 }
