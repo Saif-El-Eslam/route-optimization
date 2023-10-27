@@ -1,12 +1,11 @@
-from flask import Flask, request, jsonify
+from flask import Blueprint, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
-from db_connection import db
 from schemas import *
 from services import *
 
-app = Flask(__name__)
-CORS(app, supports_credentials=True)
+process_request_bp = Blueprint("process_request_bp", __name__)
+
 # Simulated data for bus routes and buses
 bus_routes = {
     "Route A": ["Bus 101", "Bus 102"],

@@ -14,13 +14,22 @@ db_path = os.path.join(current_directory, "db")
 sys.path.append(routes_path)
 sys.path.append(db_path)
 
+# connect to the database
+from db_connection import db
+
+# Import requests' handlers
+from process_request import process_request_bp
+from auth import auth_bp
+from admin_requests import admin_requests_bp
+
+# Create the Flask app
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
-# Import requests' handlers
-from process_request import *
-from auth import *
-from admin_requests import *
 
+# Register the blueprints
+app.register_blueprint(auth_bp)
+app.register_blueprint(admin_requests_bp)
+app.register_blueprint(process_request_bp)
 
 
 
