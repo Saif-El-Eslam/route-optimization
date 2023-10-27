@@ -70,3 +70,10 @@
   color: #12113d;
   text-decoration: none;
 }
+
+/* when width is less than 1000px */
+@media screen and (max-width: 1000px) {
+  .login-container {
+    width: 60%;
+  }
+}
