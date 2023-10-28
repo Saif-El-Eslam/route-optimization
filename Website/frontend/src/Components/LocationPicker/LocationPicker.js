@@ -73,7 +73,7 @@ const LocationPicker = ({
         }
       );
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleConfirm = async () => {
     if (pickupLocation && dropoffLocation) {
@@ -115,6 +115,8 @@ const LocationPicker = ({
       if (response) {
         // navigate to next page
         navigate("/ride");
+      } else {
+        setConfirmed(false);
       }
     }
   };

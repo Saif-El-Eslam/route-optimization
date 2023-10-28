@@ -4,8 +4,8 @@ from datetime import datetime
 from schemas import *
 from services import *
 
-process_request_bp = Blueprint("process_request_bp", __name__)
 
+process_request_bp = Blueprint("process_request_bp", __name__)
 
 # Define a route to handle incoming requests
 @process_request_bp.route("/process_request", methods=["POST"])
@@ -71,7 +71,3 @@ def process_request():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
