@@ -32,6 +32,11 @@ const Header = () => {
             <div className="header-link">Request a Ride</div>
           </Link>
         )}
+        {user?.role === 1 && (
+          <Link to="/buspath">
+            <div className="header-link">Bus Path</div>
+          </Link>
+        )}
         {user?.role === 2 && (
           <Link to="/drivers-list">
             <div className="header-link">Drivers' list</div>

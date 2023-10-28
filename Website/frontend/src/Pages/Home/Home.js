@@ -26,7 +26,7 @@ const Home = () => {
         setLoggedIn(true);
 
         if (response.data.role === 0) navigate("/get-locations");
-        else if (response.data.role === 1) navigate("/");
+        else if (response.data.role === 1) navigate("/buspath");
         else if (response.data.role === 2) navigate("/drivers-list");
       })
       .catch((error) => {

@@ -34,4 +34,4 @@ app.register_blueprint(process_request_bp)
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
