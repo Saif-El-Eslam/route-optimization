@@ -9,6 +9,7 @@ from mongoengine import (
     BooleanField,
     ObjectIdField,
     DictField,
+    ReferenceField
 
 )
 
@@ -27,15 +28,15 @@ class Bus(Document):
     depot = ListField(DecimalField(precision=6))  # [long, lat]
 
 
-class Trip(Document):
-    bus_id = StringField(max_length=50)  # license plate
-    rider_id = StringField(max_length=50)  # rider id
-    request_time = DateTimeField()  # time of request
-    pickup_time = DateTimeField()  # time of pickup
-    arrival_time = DateTimeField()  # time of arrival
-    pickup_location = ListField(DecimalField(precision=6))  # [long, lat]
-    dropoff_location = ListField(DecimalField(precision=6))  # [long, lat]
-    status = StringField(max_length=20)  # "Pending", "Active", "Completed"
+# class Trip(Document):
+#     bus_id = StringField(max_length=50)  # license plate
+#     rider_id = StringField(max_length=50)  # rider id
+#     request_time = DateTimeField()  # time of request
+#     pickup_time = DateTimeField()  # time of pickup
+#     arrival_time = DateTimeField()  # time of arrival
+#     pickup_location = ListField(DecimalField(precision=6))  # [long, lat]
+#     dropoff_location = ListField(DecimalField(precision=6))  # [long, lat]
+#     status = StringField(max_length=20)  # "Pending", "Active", "Completed"
 
 
 class User(Document):
@@ -48,7 +49,6 @@ class User(Document):
     role = IntField(max_length=2, required=True)
     bus_number = StringField(max_length=20)
     license_number = StringField(max_length=20, required=(role == 1))
-
     verified = BooleanField()
     token = StringField(max_length=200)
 
@@ -65,11 +65,15 @@ class User(Document):
 
 
 class RideRequest(Document):
-    rider_id = StringField(max_length=50)
+    rider = ReferenceField(User)
+    bus = ReferenceField(Bus)
     request_time = DateTimeField()
+    pickup_time = DateTimeField()
+    dropoff_time = DateTimeField()
     start_location = ListField(DecimalField(precision=6))
     end_location = ListField(DecimalField(precision=6))
     status = StringField(max_length=20)
+
 
 
 class PaymentTransaction(Document):
