@@ -105,7 +105,9 @@ const LocationPicker = ({
       // }
       const time = new Date();
       const passengerCount = 1;
+      const token = JSON.parse(sessionStorage.getItem("user")).token;
       const requestData = {
+        userToken: token,
         pickupLocation: pickupLocation,
         dropoffLocation: dropoffLocation,
         requestTime: time,

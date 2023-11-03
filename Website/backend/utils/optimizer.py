@@ -14,6 +14,10 @@ from tkintermapview import TkinterMapView
 # Global variables
 gmaps = googlemaps.Client(key="AIzaSyCKNRwMEYukzka5pRhiPL8LrJG_U4qlW2A")
 MAPBOX_TOKEN = "pk.eyJ1IjoiYWhtZWR5MTU1MjAwIiwiYSI6ImNsamw4cDM3NDAzejAzZG1uc2Y4MGJ4aWIifQ.9z0OvMdr2pISeiDFf4ufTw"
+avg_bus_speed = 40  # km/h
+max_pickup_delay = 15  # minutes
+max_dropoff_delay = 15  # minutes
+waiting_time = 1  # minutes
 
 
 def get_total_distance(data, manager, routing, solution):
@@ -42,40 +46,6 @@ def get_routes(solution, routing, manager):
             route.append(manager.IndexToNode(index))
         routes.append(route)
     return routes
-
-
-def get_delays(data, manager, routing, solution):
-    """Get vehicle routes from a solution and store them in an array."""
-    # print("Time Matrix:", data["time_matrix"])
-    # print("Time Window:", data["time_windows"])
-    delays = []
-    time_dimension = routing.GetDimensionOrDie('time')
-    for route_nbr in range(routing.vehicles()):
-        index = routing.Start(route_nbr)
-        route = get_routes(solution, routing, manager)[route_nbr]
-        while not routing.IsEnd(index):
-            time_var = time_dimension.CumulVar(index)
-            delays.append((solution.Min(time_var), solution.Max(time_var)))
-            index = solution.Value(routing.NextVar(index))
-        # print("delays",delays) #these are the arrival times corresponding to the route sequence
-        # FIXME: the following code doesn't seem to be right
-
-        # rearrange delays according to route
-        zipped = zip(route, delays)
-        zipped = sorted(zipped, key=lambda x: x[0])
-        sorted_delays = [pair[1] for pair in zipped]
-        # print("sorted",sorted_delays)
-        output_delays = []
-        for i in range(len(sorted_delays)):
-            output_delays.append(
-                sorted_delays[i][0] - data["time_windows"][i][0])
-
-        # pop first element to get rid of depot
-        output_delays.pop(0)
-        # print("Delays:", output_delays)
-
-    return output_delays
-
 
 # Input: list of locations
 def VRP_pickup_dropoff_TW(
@@ -186,19 +156,17 @@ def VRP_pickup_dropoff_TW(
     # search_parameters.time_limit.seconds = 30
     # solutions limit
     # search_parameters.solution_limit = 100
-    print("Start solving...")
     solution = routing.SolveWithParameters(search_parameters)
     if solution:
         # print(routes)
         # print ("Time windows", data["time_windows"])
         routes = get_routes(solution, routing, manager)
-        delays = get_delays(data, manager, routing, solution)
-        return routes, get_total_distance(data, manager, routing, solution), delays
+        return routes, get_total_distance(data, manager, routing, solution)
         # print("Solution found.")
-        # return [], 0, []
+        # return [], 0
     else:
         print("No solution found.")
-        return [], 0, []
+        return [], float("inf")
 
 
 def create_data_model(
@@ -212,7 +180,7 @@ def create_data_model(
     ]  # TODO: could pass it to the function or the locations should be in order (pickup, dropoff, pickup, dropoff, ...)
     data["num_vehicles"] = 1
     data["depot"] = 0
-    timematrix = [[int(t / 40 * 60) for t in row]
+    timematrix = [[int(t / avg_bus_speed * 60) for t in row]
                   for row in data["distance_matrix"]]
 
     # add waiting time to all time matrix values except the zero values
@@ -302,21 +270,25 @@ def calculate_time_between_locations(loc1, loc2):
 
 
 def main():
-    # input : old route, time window
-    # output : new route, total distance, delays
-    # depot = [30.77305678190685, 30.813048152000523]
-    # 1 :30.795700945482718,30.819262082140266
-    # 2: 30.8140702192498, 30.819690604927697
-    # 3: 30.77490006380151, 30.81398531217546
-    # 4:  30.873275348454126, 30.811269362683074
+
     bus_test = {
         "bus_id": "2",
         "capacity": 1,
         "current_location": [30.77305678190685, 30.813048152000523],
-        "locations": [(1, "pickup", [30.795700945482718, 30.819262082140266]),
-                      (2, "dropoff", [30.8140702192498, 30.819690604927697]),
-                      (3, "pickup", [30.77490006380151, 30.81398531217546]),
-                      (4, "dropoff", [30.873275348454126, 30.811269362683074])],
+        # "locations": [(1, "pickup", [30.795700945482718, 30.819262082140266]),
+        #               (2, "dropoff", [30.8140702192498, 30.819690604927697]),
+        #               (3, "pickup", [30.77490006380151, 30.81398531217546]),
+        #               (4, "dropoff", [30.873275348454126, 30.811269362683074])],
+        "locations": [
+            {"trip_id": "5f9e9b1b9c9d6b4b3c3e1b1a", "action": "pickup",
+                "coordinates": [30.795700945482718, 30.819262082140266]},
+            {"trip_id": "5f9e9b1b9c9d6b4b3c3e1b1a", "action": "dropoff",
+                "coordinates": [30.8140702192498, 30.819690604927697]},
+            {"trip_id": "5f9e9b1b9c9d6b4b3c3e1b1b", "action": "pickup",
+                "coordinates": [30.77490006380151, 30.81398531217546]},
+            {"trip_id": "5f9e9b1b9c9d6b4b3c3e1b1b", "action": "dropoff",
+                "coordinates": [30.873275348454126, 30.811269362683074]}
+        ],
         "route": [],
         "time_windows": [[0, 0], [0, 1440], [0, 1440], [0, 1440], [0, 1440]],
         "assigned_trips": [],
@@ -335,6 +307,74 @@ def main():
         locations, time_window, max_pickup_delay, max_dropoff_delay, waiting_time, capacity
     )
     print(result)
+
+
+def find_best_bus(buses, request):
+    """
+    Find the best bus to assign to a request
+    :param buses: list of buses
+    :param request: request to be assigned to a bus
+    :return: the best bus to assign to the request
+    """
+    trip_time = int(haversine(request.start_location[0], request.start_location[1],
+                    request.end_location[0], request.end_location[1])/avg_bus_speed*60)
+    # convert time stamp to minutes of the day using fromisoformat
+    request_time = request.request_time
+    request_time = request_time.hour * 60 + request_time.minute
+
+    request_time_window = [[request_time, request_time + max_pickup_delay], [request_time +
+                                                                             trip_time+max_dropoff_delay, request_time+trip_time+max_dropoff_delay+max_pickup_delay]]
+
+    shortest_distance = float("inf")
+    best_bus = None
+    best_bus_route = None
+    for bus in buses:
+        if bus.status == "Active":
+            coordinates_list = [bus.current_location] + [location["coordinates"]
+                                                         for location in bus.locations if "coordinates" in location] + [request.start_location, request.end_location]
+            current_minutes = datetime.now().hour * 60 + datetime.now().minute
+            bus_time_windows = bus.time_windows
+            # TODO: change this to the current time
+            # bus_time_windows[0]= [current_minutes, current_minutes]
+            bus_time_windows[0]= [700, 700]
+
+            time_windows = bus.time_windows + request_time_window
+            result = VRP_pickup_dropoff_TW(
+                coordinates_list,
+                time_windows,
+                max_pickup_delay,
+                max_dropoff_delay,
+                waiting_time,
+                bus.capacity
+            )
+            if result[1] < shortest_distance:
+                shortest_distance = result[1]
+                best_bus = bus
+                best_bus_route = result[0]
+
+
+
+    if best_bus:
+        # append the request to the bus
+        best_bus.locations.append(
+            {"trip_id": request.id, "action": "pickup", "coordinates": request.start_location})
+        best_bus.locations.append(
+            {"trip_id": request.id, "action": "dropoff", "coordinates": request.end_location})
+        best_bus.time_windows.append(request_time_window[0])
+        best_bus.time_windows.append(request_time_window[1])
+        best_bus.route = best_bus_route[0]
+        best_bus.assigned_trips.append(request.id)
+        # update the depot to float
+        best_bus.depot = [float(i) for i in best_bus.depot]
+        # update the current location to float
+        best_bus.current_location = [float(i) for i in best_bus.current_location]
+        # update the coordinates to float
+        for location in best_bus.locations:
+            location["coordinates"] = [float(i) for i in location["coordinates"]]
+        # update the route to int
+        best_bus.route = [int(i) for i in best_bus.route]
+
+    return best_bus
 
 
 if __name__ == "__main__":

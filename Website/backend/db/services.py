@@ -21,6 +21,11 @@ def get_users_by_role(role):
     return User.objects(role=role)
 
 
+def get_user_by_token(token):
+    return User.objects(token=token).first()
+
+
+
 def update_user(user_id, data):
     user = get_user_by_id(user_id)
     if user:
@@ -64,58 +69,6 @@ def delete_bus(bus_id):
     bus = get_bus(bus_id)
     if bus:
         bus.delete()
-
-
-# Trip Services
-def create_trip(data):
-    trip = Trip(**data)
-    trip.save()
-    return trip
-
-
-def get_trip(trip_id):
-    return Trip.objects(id=trip_id).first()
-
-
-def update_trip(trip_id, data):
-    trip = get_trip(trip_id)
-    if trip:
-        for key, value in data.items():
-            setattr(trip, key, value)
-        trip.save()
-    return trip
-
-
-def delete_trip(trip_id):
-    trip = get_trip(trip_id)
-    if trip:
-        trip.delete()
-
-
-# Rider Services
-def create_rider(data):
-    rider = Rider(**data)
-    rider.save()
-    return rider
-
-
-def get_rider(rider_id):
-    return Rider.objects(id=rider_id).first()
-
-
-def update_rider(rider_id, data):
-    rider = get_rider(rider_id)
-    if rider:
-        for key, value in data.items():
-            setattr(rider, key, value)
-        rider.save()
-    return rider
-
-
-def delete_rider(rider_id):
-    rider = get_rider(rider_id)
-    if rider:
-        rider.delete()
 
 
 # Ride Request Services

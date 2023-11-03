@@ -10,9 +10,11 @@ current_directory = os.path.dirname(current_file_path)
 # Append the necessary paths based on the current file's location
 routes_path = os.path.join(current_directory, "routes")
 db_path = os.path.join(current_directory, "db")
+utils_path = os.path.join(current_directory, "utils")
 
 sys.path.append(routes_path)
 sys.path.append(db_path)
+sys.path.append(utils_path)
 
 # connect to the database
 from db_connection import db
