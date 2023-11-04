@@ -88,7 +88,7 @@ const LocationPicker = ({
       //   passengerCount,
       // };
       // try {
-      //   const response = await fetch("http://127.0.0.1:5000/process_request", {
+      //   const response = await fetch("http://127.0.0.1:5000/ride_request", {
       //     method: "POST",
       //     headers: {
       //       "Content-Type": "application/json",
@@ -103,14 +103,12 @@ const LocationPicker = ({
       // } catch (error) {
       //   console.error("Error:", error);
       // }
-      const time = new Date();
       const passengerCount = 1;
       const token = JSON.parse(sessionStorage.getItem("user")).token;
       const requestData = {
         userToken: token,
         pickupLocation: pickupLocation,
         dropoffLocation: dropoffLocation,
-        requestTime: time,
         passengerCount: passengerCount,
       };
       const response = await reqestRide(requestData);
