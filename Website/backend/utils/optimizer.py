@@ -333,6 +333,7 @@ def find_best_bus(buses, request):
     best_bus = None
     best_bus_route = None
     for bus in buses:
+        print("bus: " + str(bus.bus_id))
         if bus.status == "Active":
             coordinates_list = [bus.current_location] + [location["coordinates"]
                                                          for location in bus.locations if "coordinates" in location] + [request.start_location, request.end_location]
@@ -344,7 +345,7 @@ def find_best_bus(buses, request):
             bus_time_windows[0]= [current_minutes, current_minutes]
             # bus_time_windows[0]= [700, 700]
             time_windows = bus.time_windows + request_time_window
-            print("time windows", time_windows)
+            # print("time windows", time_windows)
             result = VRP_pickup_dropoff_TW(
                 coordinates_list,
                 time_windows,
@@ -359,7 +360,7 @@ def find_best_bus(buses, request):
                 best_bus_route = result[0]
 
 
-
+    print("best_bus_route: " + str(best_bus_route))
     if best_bus:
         # append the request to the bus
         best_bus.locations.append(
