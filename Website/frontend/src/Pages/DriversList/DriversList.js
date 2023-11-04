@@ -30,7 +30,7 @@ const DriversList = () => {
   }, []);
 
   const handleVerify = (userId, verify) => {
-    verifyUser(userId, verify)
+    verifyUser(verify)
       .then((response) => {
         if (response.status === 200) {
           setUsers(
