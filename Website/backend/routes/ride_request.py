@@ -108,7 +108,7 @@ def get_trip_updates(trip_id):
     print("trip: " + str(trip))
     #  get bus from trip
     # trip.bus is a reference field (ObjectId) to the bus document
-    bus = get_bus(trip.bus.bus_id)
+    bus = get_bus_by_id(trip.bus.bus_id)
     # get route from bus
     route = bus.route
     # remove first and last locations from route
