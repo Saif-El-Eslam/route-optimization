@@ -48,7 +48,7 @@ def create_bus(data):
     return bus
 
 
-def get_bus(bus_id):
+def get_bus_by_id(bus_id):
     return Bus.objects(bus_id=bus_id).first()
 
 
@@ -57,7 +57,7 @@ def get_all_buses():
 
 
 def update_bus(bus_id, data):
-    bus = get_bus(bus_id)
+    bus = get_bus_by_id(bus_id)
     if bus:
         for key, value in data.items():
             setattr(bus, key, value)

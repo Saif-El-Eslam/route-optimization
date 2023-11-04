@@ -45,7 +45,6 @@ def verify_user():
     token = bearer_token.split(' ')[1]
 
     data = request.get_json()
-    user_id = data.get('user_id')
     verify = data.get('verify')
 
     try:
@@ -56,7 +55,7 @@ def verify_user():
         if user.role != 2:
             return jsonify({'error': 'Unauthorized'}), 403
 
-        updated_user = update_user(user_id, {'verified': verify})
+        updated_user = update_user(user.id, {'verified': verify})
         response_data = {
             'user_id': str(updated_user.id),
             'first_name': updated_user.first_name,

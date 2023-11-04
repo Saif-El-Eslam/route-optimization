@@ -36,6 +36,90 @@
   right: 10px;
 }
 
+.bus-info-container {
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.bus-ride-info,
+.bus-info-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+.bus-ride-info-title,
+.bus-info-card-title {
+  font: 20px "Roboto", sans-serif;
+  font-weight: 600;
+  text-align: center;
+}
+.bus-ride-info-content,
+.bus-info-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+.bus-ride-info-content-item-title,
+.bus-info-card-content-item-title {
+  font: 16px "Roboto", sans-serif;
+  font-weight: 600;
+}
+.bus-ride-info-content-item,
+.bus-info-card-content-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+
+  font: 16px "Roboto", sans-serif;
+}
+
+.bus-info-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bus-button {
+  width: 100%;
+  height: 50px;
+  border: none;
+  border-radius: 5px;
+  font: 16px "Roboto", sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+}
+.activate-bus-button {
+  background-color: rgb(145, 145, 149);
+  color: #fff;
+}
+.activate-bus-button:hover {
+  background-color: rgb(109, 109, 117);
+}
+.activate-bus-button:active {
+  background-color: rgb(89, 89, 101);
+}
+
+.deactivate-bus-button {
+  background-color: #12113d;
+  color: #fff;
+}
+.deactivate-bus-button:hover {
+  background-color: #24245d;
+}
+.deactivate-bus-button:active {
+  background-color: #090827;
+}
+
 .bus-path-map {
   position: relative;
 }
