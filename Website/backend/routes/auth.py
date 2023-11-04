@@ -30,7 +30,7 @@ def signup():
         verified = True
     elif role == 1:
         verified = False
-        bus_number = data.get('bus_number')
+        bus_id = data.get('bus_id')
         license_number = data.get('license_number')
 
     try: 
@@ -59,7 +59,7 @@ def signup():
                 'email': email,
                 'password': hashed_password,
                 'verified': verified,
-                'bus_number': bus_number,
+                'bus_id': bus_id,
                 'license_number': license_number
             })
 
@@ -69,7 +69,7 @@ def signup():
                 'last_name': created_user.last_name,
                 'email': created_user.email,
                 'verified': created_user.verified,
-                'bus_number': created_user.bus_number,
+                'bus_id': created_user.bus_id,
                 'license_number': created_user.license_number
             }
         else:

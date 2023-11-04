@@ -16,7 +16,7 @@ const SignUp = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    busNumber: "",
+    busId: "",
     licenseNumber: "",
   });
   const [errors, setErrors] = useState([]);
@@ -132,9 +132,9 @@ const SignUp = () => {
               <>
                 <input
                   type="text"
-                  name="busNumber"
+                  name="busId"
                   placeholder="Bus Number"
-                  value={formData.busNumber}
+                  value={formData.busId}
                   onChange={handleInputChange}
                   required
                 />

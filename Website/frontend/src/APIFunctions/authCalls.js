@@ -11,7 +11,7 @@ export const signUp = async (userType, formData) => {
   };
 
   if (userType === "driver") {
-    user.bus_number = formData.busNumber;
+    user.bus_id = formData.busId;
     user.license_number = formData.licenseNumber;
   }
 

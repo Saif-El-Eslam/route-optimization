@@ -3,8 +3,10 @@ import "./BusPath.css";
 import Header from "../../Components/Header/Header";
 import { useState } from "react";
 import { verifyBus, getMyBus } from "../../APIFunctions/driverCalls";
+import Map from "../../Components/Map/map";
 
 const BusPath = () => {
+  const [errors, setErrors] = useState([]);
   const [openInfo, setOpenInfo] = useState(true);
   const [busInfo, setBusInfo] = useState({
     bus_id: "",
@@ -21,13 +23,19 @@ const BusPath = () => {
             capacity: response.data.capacity,
             status: response.data.status,
           });
-          console.log(response.data);
         }
       })
       .catch((error) => {
-        console.log(error);
+        if (error.response) {
+          setErrors([...errors, error.response.data.error]);
+          setTimeout(() => {
+            setErrors(
+              errors.filter((error) => error !== error.response.data.error)
+            );
+          }, 3000);
+        }
       });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleActivateBus = () => {
     verifyBus(busInfo.status.toLowerCase() === "active" ? "inactive" : "active")
@@ -40,7 +48,14 @@ const BusPath = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        if (error.response) {
+          setErrors([...errors, error.response.data.error]);
+          setTimeout(() => {
+            setErrors(
+              errors.filter((error) => error !== error.response.data.error)
+            );
+          }, 3000);
+        }
       });
   };
 
@@ -125,6 +140,14 @@ const BusPath = () => {
                     : "Activate"}
                 </button>
               </div>
+
+              <div className="bus-info-errors">
+                {errors.map((error, i) => (
+                  <div className="error" key={i}>
+                    {error}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -138,8 +161,16 @@ const BusPath = () => {
               />
             </div>
           )}
-          <div className={openInfo ? "dont-display" : "bus-path-map-container"}>
-            Map Here
+          <div
+            className={!openInfo ? "dont-display" : "bus-path-map-container"}
+          >
+            <Map
+              locationCoordinates={[
+                [31.1824142, 30.0160883],
+                [31.233334, 30.033333],
+              ]}
+              openInfo={openInfo}
+            />
           </div>
         </div>
       </div>

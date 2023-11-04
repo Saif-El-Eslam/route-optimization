@@ -28,6 +28,8 @@
   position: absolute;
   top: 10px;
   left: 10px;
+
+  z-index: 100;
 }
 
 .close-info-icon {
@@ -120,8 +122,17 @@
   background-color: #090827;
 }
 
+.bus-info-errors {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin-top: -40px;
+}
+
 .bus-path-map {
   position: relative;
+  width: 70%;
 }
 
 @media (max-width: 1000px) {

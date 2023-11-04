@@ -27,7 +27,7 @@ const DriversList = () => {
           }, 3000);
         }
       });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleVerify = (userId, verify) => {
     verifyUser(verify)

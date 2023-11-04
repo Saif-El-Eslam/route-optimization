@@ -55,7 +55,7 @@ input {
   outline: none;
 }
 
-button {
+.signup-page button {
   background-color: #12113d;
   color: #fff;
   border: none;
@@ -66,7 +66,7 @@ button {
   transition: background-color 0.3s ease-in-out;
 }
 
-button:hover {
+.signup-page button:hover {
   background-color: #1c1b4b;
 }
 
