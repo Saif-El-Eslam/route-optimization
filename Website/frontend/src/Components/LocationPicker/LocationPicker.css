@@ -38,7 +38,7 @@
   margin: auto 0;
 }
 
-.mapboxgl-ctrl-geocoder {
+.location-picker-container .mapboxgl-ctrl-geocoder {
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -48,17 +48,17 @@
 }
 
 /* Style for the input box */
-#pickup-box {
+.location-picker-container #pickup-box {
   width: fit-content;
   padding: 5px 20px;
 }
 
-#dropoff-box {
+.location-picker-container #dropoff-box {
   width: fit-content;
   padding: 5px 20px;
 }
 
-.mapboxgl-ctrl-geocoder input[type="text"] {
+.location-picker-container .mapboxgl-ctrl-geocoder input[type="text"] {
   padding: 7px 15px;
   font-size: 26px;
   border: 1px solid #ccc;
@@ -68,7 +68,7 @@
   width: 370px;
 }
 
-.mapboxgl-ctrl-geocoder--pin-right {
+.location-picker-container .mapboxgl-ctrl-geocoder--pin-right {
   position: relative;
   width: 20px;
   height: 20px;
@@ -82,7 +82,7 @@
   cursor: pointer;
   margin-bottom: 30px;
 }
-.mapboxgl-ctrl-geocoder--button {
+.location-picker-container .mapboxgl-ctrl-geocoder--button {
   position: relative;
   width: 20px;
   height: 20px;
@@ -101,15 +101,15 @@
   cursor: pointer;
 }
 
-.mapboxgl-ctrl-geocoder--icon {
+.location-picker-container .mapboxgl-ctrl-geocoder--icon {
   fill: #fff;
 }
-.mapboxgl-ctrl-geocoder--icon-search {
+.location-picker-container .mapboxgl-ctrl-geocoder--icon-search {
   display: none;
 }
 
 /* Style for suggestions wrapper */
-.mapboxgl-ctrl-geocoder .suggestions {
+.location-picker-container .mapboxgl-ctrl-geocoder .suggestions {
   position: absolute;
   width: 100%;
   max-width: 342px;
@@ -124,7 +124,7 @@
   list-style: none;
   z-index: 1;
 }
-.mapboxgl-ctrl-geocoder .suggestions li {
+.location-picker-container .mapboxgl-ctrl-geocoder .suggestions li {
   font-size: 16px;
   padding: 10px;
   cursor: pointer;
@@ -132,7 +132,7 @@
 }
 
 /* Style for the Confirm Locations button */
-.location-picker-button-container {
+.location-picker-container .location-picker-button-container {
   margin: 20px;
 }
 

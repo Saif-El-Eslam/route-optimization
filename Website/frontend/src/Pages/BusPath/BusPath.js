@@ -3,6 +3,7 @@ import "./BusPath.css";
 import Header from "../../Components/Header/Header";
 import { useState } from "react";
 import { verifyBus, getMyBus } from "../../APIFunctions/driverCalls";
+import Map from "../../Components/Map/map";
 
 const BusPath = () => {
   const [errors, setErrors] = useState([]);
@@ -22,7 +23,6 @@ const BusPath = () => {
             capacity: response.data.capacity,
             status: response.data.status,
           });
-          console.log(response.data);
         }
       })
       .catch((error) => {
@@ -161,8 +161,15 @@ const BusPath = () => {
               />
             </div>
           )}
-          <div className={openInfo ? "dont-display" : "bus-path-map-container"}>
-            Map Here
+          <div
+            className={!openInfo ? "dont-display" : "bus-path-map-container"}
+          >
+            <Map
+              locationCoordinates={[
+                [31.1824142, 30.0160883],
+                [31.233334, 30.033333],
+              ]}
+            />
           </div>
         </div>
       </div>
