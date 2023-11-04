@@ -71,68 +71,43 @@ def delete_bus(bus_id):
         bus.delete()
 
 
-# Ride Request Services
-def create_ride_request(data):
-    ride_request = RideRequest(**data)
-    ride_request.save()
-    return ride_request
+# Ride  Services
+def create_ride(data):
+    ride = Ride(**data)
+    ride.save()
+    return ride
 
 
-def get_ride_request(ride_request_id):
-    return RideRequest.objects(id=ride_request_id).first()
+def get_ride(ride_id):
+    return Ride.objects(id=ride_id).first()
 
 
-def get_ride_requests_by_rider_id(rider_id):
-    return RideRequest.objects(rider_id=rider_id)
+def get_rides_by_rider_id(rider_id):
+    return Ride.objects(rider_id=rider_id)
 
 
-def get_ride_requests_by_status(status):
-    return RideRequest.objects(status=status)
+def get_rides_by_status(status):
+    return Ride.objects(status=status)
 
 
-def get_all_ride_requests():
-    return RideRequest.objects()
+def get_all_rides():
+    return Ride.objects()
 
 
-def update_ride_request(ride_request_id, data):
-    ride_request = get_ride_request(ride_request_id)
-    if ride_request:
+def update_ride(ride_id, data):
+    ride = get_ride(ride_id)
+    if ride:
         for key, value in data.items():
-            setattr(ride_request, key, value)
-        ride_request.save()
-    return ride_request
+            setattr(ride, key, value)
+        ride.save()
+    return ride
 
 
-def delete_ride_request(ride_request_id):
-    ride_request = get_ride_request(ride_request_id)
-    if ride_request:
-        ride_request.delete()
+def delete_ride(ride_id):
+    ride = get_ride(ride_id)
+    if ride:
+        ride.delete()
 
-
-# Driver Services
-def create_driver(data):
-    driver = Driver(**data)
-    driver.save()
-    return driver
-
-
-def get_driver(driver_id):
-    return Driver.objects(id=driver_id).first()
-
-
-def update_driver(driver_id, data):
-    driver = get_driver(driver_id)
-    if driver:
-        for key, value in data.items():
-            setattr(driver, key, value)
-        driver.save()
-    return driver
-
-
-def delete_driver(driver_id):
-    driver = get_driver(driver_id)
-    if driver:
-        driver.delete()
 
 
 # Payment Transaction Services

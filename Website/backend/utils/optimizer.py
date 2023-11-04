@@ -5,7 +5,6 @@ import googlemaps
 from datetime import datetime
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
-import requests
 import os
 import networkx as nx
 import tkinter as tk
@@ -196,7 +195,6 @@ def create_data_model(
     # capacity is 20 for all vehicles
     data["vehicle_capacities"] = [
         capacity for i in range(data["num_vehicles"])]
-    print(data)
     return data
 
 
@@ -310,6 +308,8 @@ def main():
 
 
 def find_best_bus(buses, request):
+    print("find_best_bus")
+
     """
     Find the best bus to assign to a request
     :param buses: list of buses
@@ -320,6 +320,10 @@ def find_best_bus(buses, request):
                     request.end_location[0], request.end_location[1])/avg_bus_speed*60)
     # convert time stamp to minutes of the day using fromisoformat
     request_time = request.request_time
+    # convert request time from string to datetime
+    if isinstance(request_time, str):
+        request_time = datetime.fromisoformat(request_time)
+    # convert request time to minutes of the day
     request_time = request_time.hour * 60 + request_time.minute
 
     request_time_window = [[request_time, request_time + max_pickup_delay], [request_time +

@@ -32,7 +32,7 @@ def process_request():
         "pickup_time": "2021-03-01 12:00:00",
         "dropoff_time": "2021-03-01 12:00:00",
         }
-        ride_request = create_ride_request(rider_request_data)
+        ride_request = create_ride(rider_request_data)
         buses = get_all_buses()
         # 2. find the best bus to assign to the ride_request
         # a. get all the buses and their current locations from the database (Bus document)
@@ -44,14 +44,16 @@ def process_request():
         # c. Update the Bus document
         updated_bus = update_bus(best_bus.bus_id, best_bus.to_mongo())
         # d. Update the RideRequest document
-        pickup_time, dropoff_time = get_pickup_dropoff_times(
-            request.id, request.request_time, best_bus.current_location, best_bus.locations, best_bus.route)
-        updated_request = update_ride_request(request.id, {
+        # pickup_time, dropoff_time = get_pickup_dropoff_times(
+        #     request.id, request.request_time, best_bus.current_location, best_bus.locations, best_bus.route)
+        pickup_time = "2021-03-01 12:00:00"
+        dropoff_time = "2021-03-01 12:00:00"
+        updated_ride = update_ride(ride_request.id, {
                                                 "status": "Assigned", "bus": best_bus, "pickup_time": pickup_time, "dropoff_time": dropoff_time})
         
         # Create the response JSON
         response_data = {
-            "tripId": str(updated_request.id),
+            "tripId": str(updated_ride.id),
             "busId": updated_bus.bus_id,
             "pickupTime": pickup_time,
             "dropoffTime": dropoff_time
@@ -75,7 +77,7 @@ def get_trip_updates():
 
 def get_trip_updates(trip_id):
     # get trip (ride request) from db
-    trip = get_ride_request(trip_id)
+    trip = get_ride(trip_id)
     # get bus from db
     bus = get_bus(trip.bus_id)
     # get route from bus

@@ -64,7 +64,7 @@ class User(Document):
 #     license_number = StringField(max_length=20)
 
 
-class RideRequest(Document):
+class Ride(Document):
     rider = ReferenceField(User)
     bus = ReferenceField(Bus)
     request_time = DateTimeField()
