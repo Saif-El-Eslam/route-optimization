@@ -113,6 +113,12 @@ const LocationPicker = ({
       };
       const response = await reqestRide(requestData);
       if (response) {
+        // add ride id to session storage
+        const ride = response;
+        ride.pickupAddress = pickupLocation.address;
+        ride.dropoffAddress = dropoffLocation.address;
+        sessionStorage.setItem("ride", JSON.stringify(ride));
+
         // navigate to next page
         navigate("/ride");
       } else {

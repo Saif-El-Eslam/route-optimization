@@ -74,6 +74,15 @@
 
 .ride-map {
   position: relative;
+
+  width: 70%;
+}
+
+.ride-map-max-width {
+  position: fixed;
+  width: 100%;
+  top: 72px;
+  height: calc(100vh - 72px);
 }
 
 @media (max-width: 1000px) {
