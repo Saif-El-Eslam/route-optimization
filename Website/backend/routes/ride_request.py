@@ -95,14 +95,20 @@ def get_bus_route():
     current_location_entry = {"trip_id": "current_location", "action": "current_location", "coordinates": current_location}
     ordered_locations.insert(0, current_location_entry)
     distance, duration, path = calcluate_trip_parmaters([i["coordinates"] for i in ordered_locations])
+    # send the response(distance, duration, path, ordered_locations)
+    # convert object id to string
+    for i in ordered_locations:
+        i["trip_id"] = str(i["trip_id"])
+        
     response_data = {
         "distance": distance,
         "duration": duration,
         "path": path,
         "locations": ordered_locations
     }
-
     return jsonify(response_data)
+
+
 
 # @ride_request_bp.route("/get_updates", methods=["GET"])
 # def get_trip_updates():
