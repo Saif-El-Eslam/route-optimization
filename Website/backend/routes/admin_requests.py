@@ -18,7 +18,7 @@ def get_not_verified_users():
             return jsonify({'error': 'Invalid token'}), 401
 
         if user.role != 2:
-            return jsonify({'error': 'Unauthorized'}), 403
+            return jsonify({'error': 'User is Unauthorized'}), 403
 
         users = get_users_by_role(1)
         response_data = []
@@ -53,7 +53,7 @@ def verify_user():
             return jsonify({'error': 'Invalid token'}), 401
 
         if user.role != 2:
-            return jsonify({'error': 'Unauthorized'}), 403
+            return jsonify({'error': 'User is Unauthorized'}), 403
 
         updated_user = update_user(user.id, {'verified': verify})
         response_data = {

@@ -18,7 +18,7 @@ def get_bus():
             return jsonify({'error': 'Invalid token'}), 401
 
         if user.role != 1:
-            return jsonify({'error': 'Unauthorized'}), 403
+            return jsonify({'error': 'User is Unauthorized'}), 403
 
         bus = get_bus_by_id(user.bus_id)
         if not bus:
@@ -55,7 +55,7 @@ def verify_bus():
             return jsonify({'error': 'Invalid token'}), 401
 
         if user.role != 1:
-            return jsonify({'error': 'Unauthorized'}), 403
+            return jsonify({'error': 'User is Unauthorized'}), 403
         
         updated_bus = update_bus(user.bus_id, {'status': verify})
         response_data = {

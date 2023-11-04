@@ -5,6 +5,7 @@ import { useState } from "react";
 import { verifyBus, getMyBus } from "../../APIFunctions/driverCalls";
 
 const BusPath = () => {
+  const [errors, setErrors] = useState([]);
   const [openInfo, setOpenInfo] = useState(true);
   const [busInfo, setBusInfo] = useState({
     bus_id: "",
@@ -25,9 +26,16 @@ const BusPath = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        if (error.response) {
+          setErrors([...errors, error.response.data.error]);
+          setTimeout(() => {
+            setErrors(
+              errors.filter((error) => error !== error.response.data.error)
+            );
+          }, 3000);
+        }
       });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleActivateBus = () => {
     verifyBus(busInfo.status.toLowerCase() === "active" ? "inactive" : "active")
@@ -40,7 +48,14 @@ const BusPath = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        if (error.response) {
+          setErrors([...errors, error.response.data.error]);
+          setTimeout(() => {
+            setErrors(
+              errors.filter((error) => error !== error.response.data.error)
+            );
+          }, 3000);
+        }
       });
   };
 
@@ -124,6 +139,14 @@ const BusPath = () => {
                     ? "Deacivate"
                     : "Activate"}
                 </button>
+              </div>
+
+              <div className="bus-info-errors">
+                {errors.map((error, i) => (
+                  <div className="error" key={i}>
+                    {error}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
