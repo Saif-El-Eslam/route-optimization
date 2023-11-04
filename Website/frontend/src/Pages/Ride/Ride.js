@@ -20,6 +20,7 @@ const RequestRide = () => {
     const dropoffCoordinates = dropoffPath[dropoffPath.length - 1];
 
     setRideInfo({
+      assignedBus: JSON.parse(sessionStorage.getItem("ride")).busId,
       pickupLocation: {
         address: JSON.parse(sessionStorage.getItem("ride")).pickupAddress,
         coordinates: pickupcoordinates,
@@ -28,17 +29,25 @@ const RequestRide = () => {
         address: JSON.parse(sessionStorage.getItem("ride")).dropoffAddress,
         coordinates: dropoffCoordinates,
       },
-      time: getDiffHours(
-        extractTime(JSON.parse(sessionStorage.getItem("ride")).pickupTime).time,
-        extractTime(JSON.parse(sessionStorage.getItem("ride")).dropoffTime).time
-      ),
+      timeToPickup: JSON.parse(sessionStorage.getItem("ride")).durationToPickup,
+      timeToDropoff: JSON.parse(sessionStorage.getItem("ride"))
+        .durationToDropoff,
+      distanceToPickup: JSON.parse(sessionStorage.getItem("ride"))
+        .distanceToPickup,
+      distanceToDropoff: JSON.parse(sessionStorage.getItem("ride"))
+        .distanceToDropoff,
+
       // passengerCount: 1,
     });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setWholePath([...pickupPath, ...dropoffPath]);
-    setMarkers([pickupPath[0], pickupPath[pickupPath.length - 1], dropoffPath[dropoffPath.length - 1]]);
+    setMarkers([
+      pickupPath[0],
+      pickupPath[pickupPath.length - 1],
+      dropoffPath[dropoffPath.length - 1],
+    ]);
   }, [pickupPath, dropoffPath]);
 
   return (
@@ -58,7 +67,14 @@ const RequestRide = () => {
               <div className="ride-info-header">Ride Info</div>
               <div className="ride-info-content">
                 <div className="ride-info-item">
-                  <div className="ride-info-item-header">Pickup Location</div>
+                  <div className="ride-info-item-header">Bus:</div>
+                  <div className="ride-info-item-content">
+                    {rideInfo?.assignedBus}
+                  </div>
+                </div>
+
+                <div className="ride-info-item">
+                  <div className="ride-info-item-header">From:</div>
                   <div className="ride-info-item-content">
                     <div className="ride-info-item-content-address">
                       {rideInfo?.pickupLocation?.address}
@@ -67,7 +83,7 @@ const RequestRide = () => {
                   </div>
                 </div>
                 <div className="ride-info-item">
-                  <div className="ride-info-item-header">Dropoff Location</div>
+                  <div className="ride-info-item-header">To:</div>
                   <div className="ride-info-item-content">
                     <div className="ride-info-item-content-address">
                       {rideInfo?.dropoffLocation?.address}
@@ -76,9 +92,25 @@ const RequestRide = () => {
                   </div>
                 </div>
                 <div className="ride-info-item">
-                  <div className="ride-info-item-header">Time to arrive</div>
-                  <div className="ride-info-item-content">{rideInfo?.time}</div>
+                  <div className="ride-info-item-header">Pickup in: </div>
+                  <div className="ride-info-item-content">
+                    {Math.floor(rideInfo?.timeToPickup)} {" "}
+                   min 
+                  <span style={ {fontWeight: "bold"}}>(~{Math.ceil(rideInfo?.distanceToPickup)} KM)</span>
+            
+                  </div>
                 </div>
+                <div className="ride-info-item">
+                  <div className="ride-info-item-header">Arrive in: </div>
+                  <div className="ride-info-item-content">
+                    {Math.floor(rideInfo?.timeToDropoff) +
+                      Math.floor(rideInfo?.timeToPickup)}{" "}
+                    min 
+                    <span style={ {fontWeight: "bold"}}>(~{Math.ceil(rideInfo?.distanceToDropoff)} KM)</span>
+
+                  </div>
+                </div>
+
                 {/* <div className="ride-info-item">
                   <div className="ride-info-item-header">Passenger Count</div>
                   <div className="ride-info-item-content">
@@ -112,40 +144,6 @@ const RequestRide = () => {
       </div>
     </div>
   );
-};
-
-const extractTime = (fullDate) => {
-  // split time into array of strings by space
-  const timeArray = fullDate.split(" ");
-  const dayString = timeArray[0];
-  const date = timeArray[1] + " " + timeArray[2]; //+ " " + timeArray[3];
-  const time = timeArray[4];
-  const region = timeArray[5];
-
-  return { dayString, date, time, region };
-};
-
-const getDiffHours = (time1, time2) => {
-  const time1Array = time1.split(":");
-  const time2Array = time2.split(":");
-  const time1Hours = parseInt(time1Array[0]);
-  const time2Hours = parseInt(time2Array[0]);
-  const time1Minutes = parseInt(time1Array[1]);
-  const time2Minutes = parseInt(time2Array[1]);
-
-  let diffHours = time2Hours - time1Hours;
-  let diffMinutes = time2Minutes - time1Minutes;
-
-  if (diffMinutes < 0) {
-    diffHours--;
-    diffMinutes += 60;
-  }
-
-  if (diffHours < 0) {
-    diffHours += 24;
-  }
-
-  return diffHours + " hours " + diffMinutes + " minutes";
 };
 
 export default RequestRide;
