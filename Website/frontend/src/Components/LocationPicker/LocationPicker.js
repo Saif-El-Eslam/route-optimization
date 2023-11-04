@@ -118,6 +118,7 @@ const LocationPicker = ({
         ride.pickupAddress = pickupLocation.address;
         ride.dropoffAddress = dropoffLocation.address;
         sessionStorage.setItem("ride", JSON.stringify(ride));
+        console.log(response);
 
         // navigate to next page
         navigate("/ride");

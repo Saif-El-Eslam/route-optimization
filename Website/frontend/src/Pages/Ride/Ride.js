@@ -10,6 +10,7 @@ const RequestRide = () => {
   const [pickupPath, setPickupPath] = useState([]);
   const [dropoffPath, setDropoffPath] = useState([]);
   const [wholePath, setWholePath] = useState([]);
+  const [markers, setMarkers] = useState([]);
 
   useEffect(() => {
     setPickupPath(JSON.parse(sessionStorage.getItem("ride")).pathToPickup);
@@ -37,6 +38,7 @@ const RequestRide = () => {
 
   useEffect(() => {
     setWholePath([...pickupPath, ...dropoffPath]);
+    setMarkers([pickupPath[0], pickupPath[pickupPath.length - 1], dropoffPath[dropoffPath.length - 1]]);
   }, [pickupPath, dropoffPath]);
 
   return (
@@ -98,14 +100,10 @@ const RequestRide = () => {
             </div>
           )}
           <div className={!openInfo ? "dont-display" : "ride-map-container"}>
-            {wholePath.length !== 0 && (
+            {wholePath.length !== 0 && markers.length !== 0 && (
               <Map
-                locationCoordinates={wholePath}
-                markersIndexes={[
-                  0,
-                  pickupPath.length - 1,
-                  wholePath.length - 1,
-                ]}
+                path_points={wholePath}
+                markers_points={markers}
                 openInfo={openInfo}
               />
             )}
