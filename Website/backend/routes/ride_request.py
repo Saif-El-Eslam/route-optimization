@@ -1,45 +1,48 @@
 from flask import Blueprint, request, jsonify
-from datetime import datetime
+from datetime import datetime, timedelta
+import pytz
 from schemas import *
 from services import *
 from optimizer import find_best_bus
 from bson import ObjectId
 
-process_request_bp = Blueprint("process_request_bp", __name__)
+ride_request_bp = Blueprint("ride_request_bp", __name__)
 
-@process_request_bp.route("/process_request", methods=["POST"])
-def process_request():
+@ride_request_bp.route("/ride_request", methods=["POST"])
+def ride_request():
     try:
         # Get data from the JSON request
         data = request.get_json()
         # # Extract request details
-        request_time = data.get("requestTime")
-        pickup_location = data.get("pickupLocation")
-        dropoff_location = data.get("dropoffLocation")
+        # request time is the current time
+        request_time = datetime.now(pytz.timezone("America/New_York"))
+        pickup_location = data.get("pickupLocation").get("coordinates")
+        dropoff_location = data.get("dropoffLocation").get("coordinates")
         passenger_count = data.get("passengerCount")
         user_token = data.get("userToken")
-
+        print("request_time: " + str(request_time))
         # 1. add the request to the database (RideRequest document)
         retrieved_user = get_user_by_token(user_token)
         
-        rider_request_data = {
+        rider_data = {
         "rider": retrieved_user,
-        "request_time": "2021-03-01 12:00:00",
-        "start_location": [-85.617046, 42.3030528],  # [longitude, latitude
-        "end_location": [-85.617046, 42.3030528],  # [longitude, latitude]
+        "request_time": request_time,
+        "start_location": pickup_location,  # [longitude, latitude]
+        "end_location": dropoff_location,  # [longitude, latitude]
         "status": "Pending",
         "bus": ObjectId(),
         "pickup_time": "2021-03-01 12:00:00",
         "dropoff_time": "2021-03-01 12:00:00",
         }
-        ride_request = create_ride(rider_request_data)
+        print(rider_data)
+        ride = create_ride(rider_data)
         buses = get_all_buses()
-        # 2. find the best bus to assign to the ride_request
+        # 2. find the best bus to assign to the ride
         # a. get all the buses and their current locations from the database (Bus document)
-        # b. find the best bus to assign to the ride_request (best_bus = find_best_bus(buses, ride_request))
-        best_bus = find_best_bus(buses, ride_request)
+        # b. find the best bus to assign to the ride (best_bus = find_best_bus(buses, ride))
+        best_bus = find_best_bus(buses, ride)
         if best_bus is None:
-            print("No bus available for ride_request " + str(ride_request.id))
+            print("No bus available for ride " + str(ride.id))
             return jsonify({"error": "No bus available"}), 400
         # c. Update the Bus document
         updated_bus = update_bus(best_bus.bus_id, best_bus.to_mongo())
@@ -48,7 +51,7 @@ def process_request():
         #     request.id, request.request_time, best_bus.current_location, best_bus.locations, best_bus.route)
         pickup_time = "2021-03-01 12:00:00"
         dropoff_time = "2021-03-01 12:00:00"
-        updated_ride = update_ride(ride_request.id, {
+        updated_ride = update_ride(ride.id, {
                                                 "status": "Assigned", "bus": best_bus, "pickup_time": pickup_time, "dropoff_time": dropoff_time})
         
         # Create the response JSON
@@ -64,7 +67,7 @@ def process_request():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-@process_request_bp.route("/get_updates", methods=["GET"])
+@ride_request_bp.route("/get_updates", methods=["GET"])
 def get_trip_updates():
     # get user id , trip id from the body
     data= request.get_json()
@@ -113,4 +116,4 @@ def get_trip_updates(trip_id):
 
 
 if __name__ == "__main__":
-    process_request_bp.run(debug=True)
+    ride_request_bp.run(debug=True)

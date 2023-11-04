@@ -20,7 +20,7 @@ sys.path.append(utils_path)
 from db_connection import db
 
 # Import requests' handlers
-from process_request import process_request_bp
+from ride_request import ride_request_bp
 from auth import auth_bp
 from admin_requests import admin_requests_bp
 
@@ -31,7 +31,7 @@ CORS(app, supports_credentials=True)
 # Register the blueprints
 app.register_blueprint(auth_bp)
 app.register_blueprint(admin_requests_bp)
-app.register_blueprint(process_request_bp)
+app.register_blueprint(ride_request_bp)
 
 
 

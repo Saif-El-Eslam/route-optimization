@@ -2,7 +2,8 @@
 import math
 import pandas as pd
 import googlemaps
-from datetime import datetime
+from datetime import datetime, timedelta
+import pytz
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 import os
@@ -14,8 +15,8 @@ from tkintermapview import TkinterMapView
 gmaps = googlemaps.Client(key="AIzaSyCKNRwMEYukzka5pRhiPL8LrJG_U4qlW2A")
 MAPBOX_TOKEN = "pk.eyJ1IjoiYWhtZWR5MTU1MjAwIiwiYSI6ImNsamw4cDM3NDAzejAzZG1uc2Y4MGJ4aWIifQ.9z0OvMdr2pISeiDFf4ufTw"
 avg_bus_speed = 40  # km/h
-max_pickup_delay = 15  # minutes
-max_dropoff_delay = 15  # minutes
+max_pickup_delay = 50  # minutes
+max_dropoff_delay = 50  # minutes
 waiting_time = 1  # minutes
 
 
@@ -164,7 +165,7 @@ def VRP_pickup_dropoff_TW(
         # print("Solution found.")
         # return [], 0
     else:
-        print("No solution found.")
+        # print("No solution found.")
         return [], float("inf")
 
 
@@ -308,7 +309,6 @@ def main():
 
 
 def find_best_bus(buses, request):
-    print("find_best_bus")
 
     """
     Find the best bus to assign to a request
@@ -336,13 +336,15 @@ def find_best_bus(buses, request):
         if bus.status == "Active":
             coordinates_list = [bus.current_location] + [location["coordinates"]
                                                          for location in bus.locations if "coordinates" in location] + [request.start_location, request.end_location]
-            current_minutes = datetime.now().hour * 60 + datetime.now().minute
+            local_time = pytz.timezone("America/New_York")
+
+            current_minutes = datetime.now(local_time).hour * 60 + datetime.now(local_time).minute
             bus_time_windows = bus.time_windows
             # TODO: change this to the current time
-            # bus_time_windows[0]= [current_minutes, current_minutes]
-            bus_time_windows[0]= [700, 700]
-
+            bus_time_windows[0]= [current_minutes, current_minutes]
+            # bus_time_windows[0]= [700, 700]
             time_windows = bus.time_windows + request_time_window
+            print("time windows", time_windows)
             result = VRP_pickup_dropoff_TW(
                 coordinates_list,
                 time_windows,

@@ -6,7 +6,7 @@ export async function addUser(userData) {
 
 export async function reqestRide(requestData) {
   try {
-    const response = await fetch("http://127.0.0.1:5000/process_request", {
+    const response = await fetch("http://127.0.0.1:5000/ride_request", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
