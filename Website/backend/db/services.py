@@ -48,6 +48,7 @@ def create_bus(data):
     return bus
 
 
+
 def get_bus_by_id(bus_id):
     return Bus.objects(bus_id=bus_id).first()
 

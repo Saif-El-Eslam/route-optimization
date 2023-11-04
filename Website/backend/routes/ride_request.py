@@ -78,6 +78,31 @@ def ride_request():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+@ride_request_bp.route("/bus_route", methods=["GET"])
+def get_bus_route():
+    data = request.get_json()
+    bus_id = data.get("busId")
+    bus = get_bus_by_id(bus_id)
+    route = bus.route
+    route = route[1:-1]
+
+    locations = bus.locations
+    current_location = bus.current_location
+    current_location = [float(i) for i in current_location]
+    ordered_locations = []
+    for i in route:
+        ordered_locations.append(locations[i-1])
+    current_location_entry = {"trip_id": "current_location", "action": "current_location", "coordinates": current_location}
+    ordered_locations.insert(0, current_location_entry)
+    distance, duration, path = calcluate_trip_parmaters([i["coordinates"] for i in ordered_locations])
+    response_data = {
+        "distance": distance,
+        "duration": duration,
+        "path": path,
+        "locations": ordered_locations
+    }
+
+    return jsonify(response_data)
 
 # @ride_request_bp.route("/get_updates", methods=["GET"])
 # def get_trip_updates():
