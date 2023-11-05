@@ -94,10 +94,10 @@ const RequestRide = () => {
                 <div className="ride-info-item">
                   <div className="ride-info-item-header">Pickup in: </div>
                   <div className="ride-info-item-content">
-                    {Math.floor(rideInfo?.timeToPickup)} {" "}
-                   min 
-                  <span style={ {fontWeight: "bold"}}>(~{Math.ceil(rideInfo?.distanceToPickup)} KM)</span>
-            
+                    {Math.floor(rideInfo?.timeToPickup)} min
+                    <span style={{ fontWeight: "bold" }}>
+                      (~{rideInfo?.distanceToPickup.toFixed(2)} KM)
+                    </span>
                   </div>
                 </div>
                 <div className="ride-info-item">
@@ -105,9 +105,10 @@ const RequestRide = () => {
                   <div className="ride-info-item-content">
                     {Math.floor(rideInfo?.timeToDropoff) +
                       Math.floor(rideInfo?.timeToPickup)}{" "}
-                    min 
-                    <span style={ {fontWeight: "bold"}}>(~{Math.ceil(rideInfo?.distanceToDropoff)} KM)</span>
-
+                    min
+                    <span style={{ fontWeight: "bold" }}>
+                      (~{rideInfo?.distanceToDropoff.toFixed(2)} KM)
+                    </span>
                   </div>
                 </div>
 

@@ -42,7 +42,7 @@
 .ride-info-item {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 1px;
 }
 
 .ride-info-item-header {
