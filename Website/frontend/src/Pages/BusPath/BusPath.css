@@ -65,7 +65,7 @@
 .bus-info-card-content {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
   width: 100%;
 }
 .bus-ride-info-content-item-title,
@@ -73,7 +73,22 @@
   font: 16px "Roboto", sans-serif;
   font-weight: 600;
 }
-.bus-ride-info-content-item,
+.bus-ride-info-content-item-content {
+  width: 100%;
+  text-align: justify;
+
+  display: flex;
+  gap: 10px;
+}
+.bus-ride-info-content-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 5px;
+  width: 100%;
+
+  font: 16px "Roboto", sans-serif;
+}
 .bus-info-card-content-item {
   display: flex;
   flex-direction: row;
@@ -133,6 +148,13 @@
 .bus-path-map {
   position: relative;
   width: 70%;
+}
+
+.bus-path-map-max-width {
+  position: fixed;
+  width: 100%;
+  top: 72px;
+  height: calc(100vh - 72px);
 }
 
 @media (max-width: 1000px) {

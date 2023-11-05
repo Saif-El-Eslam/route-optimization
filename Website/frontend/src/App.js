@@ -19,16 +19,16 @@ const user = JSON.parse(sessionStorage.getItem("user"));
 sessionStorage.setItem(
   "urls",
   JSON.stringify([
-    "http://localhost:3000",
-    "http://localhost:3000/get-locations",
-    "http://localhost:3000/ride",
-    "http://localhost:3000/signup",
-    "http://localhost:3000/contact",
-    "http://localhost:3000/about",
-    "http://localhost:3000/not-found",
-    "http://localhost:3000/*",
-    "http://localhost:3000/drivers-list",
-    "http://localhost:3000/buspath",
+    "",
+    "get-locations",
+    "ride",
+    "signup",
+    "contact",
+    "about",
+    "not-found",
+    "*",
+    "drivers-list",
+    "buspath",
   ])
 );
 

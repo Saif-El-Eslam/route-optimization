@@ -61,7 +61,6 @@ const Map = ({ path_points, markers_points, openInfo }) => {
           const el = document.createElement("div");
           el.className = "marker";
           new mapboxgl.Marker(el).setLngLat(marker).addTo(mainMap);
-          
         } else {
           addToMap(mainMap, marker);
         }
@@ -79,30 +78,34 @@ const Map = ({ path_points, markers_points, openInfo }) => {
       });
       // Draw path line on map
       mainMap.on("load", () => {
-        mainMap.addSource("route", {
-          type: "geojson",
-          data: {
-            type: "Feature",
-            properties: {},
-            geometry: {
-              type: "LineString",
-              coordinates: coordinates,
+        if (!mainMap.getSource("route")) {
+          // check if source is already added
+
+          mainMap.addSource("route", {
+            type: "geojson",
+            data: {
+              type: "Feature",
+              properties: {},
+              geometry: {
+                type: "LineString",
+                coordinates: coordinates,
+              },
             },
-          },
-        });
-        mainMap.addLayer({
-          id: "route",
-          type: "line",
-          source: "route",
-          layout: {
-            "line-join": "round",
-            "line-cap": "round",
-          },
-          paint: {
-            "line-color": "#12113D",
-            "line-width": 4,
-          },
-        });
+          });
+          mainMap.addLayer({
+            id: "route",
+            type: "line",
+            source: "route",
+            layout: {
+              "line-join": "round",
+              "line-cap": "round",
+            },
+            paint: {
+              "line-color": "#12113D",
+              "line-width": 4,
+            },
+          });
+        }
       });
     }
   }, [coordinates, mainMap, path_points]);

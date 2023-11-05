@@ -4,8 +4,9 @@ import Header from "../../Components/Header/Header";
 
 const Loading = () => {
   const urls = JSON.parse(sessionStorage.getItem("urls"));
+  const currentUrl = window.location.href.split("/").pop();
 
-  if (urls.includes(window.location.href)) {
+  if (urls.includes(currentUrl)) {
     window.location.reload();
   } else {
     window.location.href = "/not-found";

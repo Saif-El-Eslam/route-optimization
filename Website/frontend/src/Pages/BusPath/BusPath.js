@@ -2,7 +2,13 @@ import React, { useEffect } from "react";
 import "./BusPath.css";
 import Header from "../../Components/Header/Header";
 import { useState } from "react";
-import { verifyBus, getMyBus } from "../../APIFunctions/driverCalls";
+import {
+  verifyBus,
+  // getMyBus,
+  getCustomerNameByTripId,
+  getBusRoute,
+} from "../../APIFunctions/driverCalls";
+import { getAddress } from "../../APIFunctions/helperCalls";
 import Map from "../../Components/Map/map";
 
 const BusPath = () => {
@@ -13,9 +19,41 @@ const BusPath = () => {
     capacity: "",
     status: "",
   });
+  const [rideInfo, setRideInfo] = useState({
+    distance: null,
+    duration: null,
+  });
+  const [pathPoints, setPathPoints] = useState([]);
+  const [markersPoints, setMarkersPoints] = useState([]);
+  const [nextLocation, setNextLocation] = useState({
+    coordinates: [],
+    address: "",
+  });
+  const [nextCustomer, setNextCustomer] = useState();
 
   useEffect(() => {
-    getMyBus()
+    // getMyBus()
+    //   .then((response) => {
+    //     if (response.status === 200) {
+    //       setBusInfo({
+    //         bus_id: response.data.bus_id,
+    //         capacity: response.data.capacity,
+    //         status: response.data.status,
+    //       });
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     if (error.response) {
+    //       setErrors([...errors, error.response.data.error]);
+    //       setTimeout(() => {
+    //         setErrors(
+    //           errors.filter((error) => error !== error.response.data.error)
+    //         );
+    //       }, 3000);
+    //     }
+    //   });
+
+    getBusRoute()
       .then((response) => {
         if (response.status === 200) {
           setBusInfo({
@@ -23,6 +61,48 @@ const BusPath = () => {
             capacity: response.data.capacity,
             status: response.data.status,
           });
+          setPathPoints(response.data.path);
+          setMarkersPoints(
+            response.data.locations.map((location) => location.coordinates)
+          );
+          setNextLocation({
+            ...nextLocation,
+            coordinates: response.data.locations[1].coordinates,
+          });
+          setRideInfo({
+            ...rideInfo,
+            distance: response.data.distance,
+            duration: response.data.duration,
+          });
+
+          // get the name of the next customer
+          getCustomerNameByTripId(response.data.locations[1].trip_id)
+            .then((response) => {
+              if (response.status === 200) {
+                setNextCustomer(response.data.name);
+              } else {
+                setErrors([...errors, response.data.error]);
+                setTimeout(() => {
+                  setErrors(
+                    errors.filter((error) => error !== response.data.error)
+                  );
+                }, 3000);
+              }
+            })
+            .catch((error) => {
+              if (error.response) {
+                setErrors([...errors, error.response.data.error]);
+                setTimeout(() => {
+                  setErrors(
+                    errors.filter(
+                      (error) => error !== error.response.data.error
+                    )
+                  );
+                }, 3000);
+              }
+            });
+
+          console.log(response.data);
         }
       })
       .catch((error) => {
@@ -36,6 +116,29 @@ const BusPath = () => {
         }
       });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    // get the addresses of the next location and next customer
+    getAddress(nextLocation.coordinates)
+      .then((response) => {
+        if (response.status === 200) {
+          setNextLocation({
+            ...nextLocation,
+            address: response.data.features[0].place_name,
+          });
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          setErrors([...errors, error.response.data.error]);
+          setTimeout(() => {
+            setErrors(
+              errors.filter((error) => error !== error.response.data.error)
+            );
+          }, 3000);
+        }
+      });
+  }, [nextLocation.coordinates]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleActivateBus = () => {
     verifyBus(busInfo.status.toLowerCase() === "active" ? "inactive" : "active")
@@ -81,7 +184,7 @@ const BusPath = () => {
                       Next Location
                     </div>
                     <div className="bus-ride-info-content-item-content">
-                      Location Name
+                      {nextLocation.address}
                     </div>
                   </div>
                   <div className="bus-ride-info-content-item">
@@ -89,7 +192,18 @@ const BusPath = () => {
                       Next Customer
                     </div>
                     <div className="bus-ride-info-content-item-content">
-                      Customer Name
+                      {nextCustomer}
+                    </div>
+                  </div>
+                  <div className="bus-ride-info-content-item">
+                    <div className="bus-ride-info-content-item-title">
+                      Arrive in:
+                    </div>
+                    <div className="bus-ride-info-content-item-content">
+                      {Math.round(rideInfo?.duration)} min
+                      <span style={{ fontWeight: "bold" }}>
+                        (~{rideInfo?.distance?.toFixed(2)} KM)
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -108,18 +222,18 @@ const BusPath = () => {
                   </div>
                   <div className="bus-info-card-content-item">
                     <div className="bus-info-card-content-item-title">
-                      Bus Capacity
+                      Bus Capacity:
                     </div>
                     <div className="bus-info-card-content-item-content">
-                      {busInfo.capacity}
+                      {busInfo?.capacity}
                     </div>
                   </div>
                   <div className="bus-info-card-content-item">
                     <div className="bus-info-card-content-item-title">
-                      Bus Status
+                      Bus Status:
                     </div>
                     <div className="bus-info-card-content-item-content">
-                      {busInfo.status}
+                      {busInfo?.status}
                     </div>
                   </div>
                 </div>
@@ -136,8 +250,8 @@ const BusPath = () => {
                   onClick={handleActivateBus}
                 >
                   {busInfo.status.toLowerCase() === "active"
-                    ? "Deacivate"
-                    : "Activate"}
+                    ? "Deacivate Bus"
+                    : "Activate Bus"}
                 </button>
               </div>
 
@@ -151,7 +265,7 @@ const BusPath = () => {
             </div>
           </div>
         )}
-        <div className="bus-path-map">
+        <div className={openInfo ? "bus-path-map" : "bus-path-map-max-width"}>
           {!openInfo && (
             <div className="open-info-icon button-icon">
               <img
@@ -164,13 +278,13 @@ const BusPath = () => {
           <div
             className={!openInfo ? "dont-display" : "bus-path-map-container"}
           >
-            <Map
-              locationCoordinates={[
-                [31.1824142, 30.0160883],
-                [31.233334, 30.033333],
-              ]}
-              openInfo={openInfo}
-            />
+            {pathPoints.length !== 0 && markersPoints.length !== 0 && (
+              <Map
+                path_points={pathPoints}
+                markers_points={markersPoints}
+                openInfo={openInfo}
+              />
+            )}
           </div>
         </div>
       </div>

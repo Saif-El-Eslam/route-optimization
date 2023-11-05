@@ -80,33 +80,51 @@ def ride_request():
 
 @ride_request_bp.route("/bus_route", methods=["GET"])
 def get_bus_route():
-    data = request.get_json()
-    bus_id = data.get("busId")
-    bus = get_bus_by_id(bus_id)
-    route = bus.route
-    route = route[1:-1]
+    bearer_token = request.headers.get('Authorization')
+    token = bearer_token.split(' ')[1]
 
-    locations = bus.locations
-    current_location = bus.current_location
-    current_location = [float(i) for i in current_location]
-    ordered_locations = []
-    for i in route:
-        ordered_locations.append(locations[i-1])
-    current_location_entry = {"trip_id": "current_location", "action": "current_location", "coordinates": current_location}
-    ordered_locations.insert(0, current_location_entry)
-    distance, duration, path = calcluate_trip_parmaters([i["coordinates"] for i in ordered_locations])
-    # send the response(distance, duration, path, ordered_locations)
-    # convert object id to string
-    for i in ordered_locations:
-        i["trip_id"] = str(i["trip_id"])
-        
-    response_data = {
-        "distance": distance,
-        "duration": duration,
-        "path": path,
-        "locations": ordered_locations
-    }
-    return jsonify(response_data)
+    try:
+        user = get_user_by_token(token)
+        if not user:
+            return jsonify({'error': 'Invalid token'}), 401
+
+        if user.role != 1:
+            return jsonify({'error': 'User is Unauthorized'}), 403
+
+        bus = get_bus_by_id(user.bus_id)
+        if not bus:
+            return jsonify({'error': 'Bus not found'}), 404
+
+        route = bus.route
+        route = route[1:-1]
+
+        locations = bus.locations
+        current_location = bus.current_location
+        current_location = [float(i) for i in current_location]
+        ordered_locations = []
+        for i in route:
+            ordered_locations.append(locations[i-1])
+        current_location_entry = {"trip_id": "current_location", "action": "current_location", "coordinates": current_location}
+        ordered_locations.insert(0, current_location_entry)
+        distance, duration, path = calcluate_trip_parmaters([i["coordinates"] for i in ordered_locations])
+        # send the response(distance, duration, path, ordered_locations)
+        # convert object id to string
+        for i in ordered_locations:
+            i["trip_id"] = str(i["trip_id"])
+            
+        response_data = {
+            "distance": distance,
+            "duration": duration,
+            "path": path,
+            "locations": ordered_locations,
+            'bus_id': bus.bus_id,
+            'capacity': bus.capacity,
+            'status': bus.status,
+        }
+        return jsonify(response_data)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
 
 
 
@@ -133,7 +151,7 @@ def get_bus_route():
 
 def get_trip_updates(trip_id):
     # get trip (ride request) from db
-    trip = get_ride(trip_id)
+    trip = get_ride_by_id(trip_id)
     print("trip: " + str(trip))
     #  get bus from trip
     # trip.bus is a reference field (ObjectId) to the bus document

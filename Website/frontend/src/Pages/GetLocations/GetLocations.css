@@ -3,7 +3,7 @@
   height: 100vh;
 
   /* set back ground image to fill the whole page get the image from the public folder */
-  background-image: url("http://localhost:3000/get-location-bg.png");
+  background-image: url("../../../public/get-location-bg.png");
   background-repeat: no-repeat;
   background-size: cover;
 }

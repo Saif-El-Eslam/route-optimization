@@ -94,7 +94,7 @@ const RequestRide = () => {
                 <div className="ride-info-item">
                   <div className="ride-info-item-header">Pickup in: </div>
                   <div className="ride-info-item-content">
-                    {Math.floor(rideInfo?.timeToPickup)} min
+                    {Math.round(rideInfo?.timeToPickup)} min
                     <span style={{ fontWeight: "bold" }}>
                       (~{rideInfo?.distanceToPickup.toFixed(2)} KM)
                     </span>
@@ -103,8 +103,9 @@ const RequestRide = () => {
                 <div className="ride-info-item">
                   <div className="ride-info-item-header">Arrive in: </div>
                   <div className="ride-info-item-content">
-                    {Math.floor(rideInfo?.timeToDropoff) +
-                      Math.floor(rideInfo?.timeToPickup)}{" "}
+                    {Math.round(
+                      rideInfo?.timeToDropoff + rideInfo?.timeToPickup
+                    )}{" "}
                     min
                     <span style={{ fontWeight: "bold" }}>
                       (~{rideInfo?.distanceToDropoff.toFixed(2)} KM)

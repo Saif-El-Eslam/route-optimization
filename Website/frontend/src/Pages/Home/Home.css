@@ -3,7 +3,8 @@
 .home-container {
   width: 100%;
   height: 100vh;
-  background-image: url("http://localhost:3000/home-bg.png");
+  /* take from the public forder home-bg.png */
+  background-image: url("../../../public/home-bg.png");
   background-repeat: no-repeat;
   background-size: cover;
   position: relative; /* Ensure proper stacking context */

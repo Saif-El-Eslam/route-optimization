@@ -4,6 +4,8 @@ from flask_cors import CORS
 from services import *
 from schemas import *
 from auth_handlers import get_user_by_token
+from bson import ObjectId
+import json
 
 driver_requests_bp = Blueprint('driver_requests_bp', __name__)
 
@@ -56,18 +58,38 @@ def verify_bus():
 
         if user.role != 1:
             return jsonify({'error': 'User is Unauthorized'}), 403
-        
         updated_bus = update_bus(user.bus_id, {'status': verify})
         response_data = {
-            'bus_id': updated_bus.bus_id,
-            'capacity': updated_bus.capacity,
-            'current_location': updated_bus.current_location,
-            'locations': updated_bus.locations,
-            'route': updated_bus.route,
-            'time_windows': updated_bus.time_windows,
-            'assigned_trips': updated_bus.assigned_trips,
             'status': updated_bus.status,
-            'depot': updated_bus.depot,
+        }
+
+        return jsonify(response_data), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+
+@driver_requests_bp.route('/customer_name/<trip_id>', methods=['GET'])
+def get_customer_name(trip_id):
+    try:
+        trip = get_ride_by_id(ObjectId(trip_id))
+        
+        # trip.rider is a user object, convert it to json then to a dictionary
+        dictTripRider = json.loads(trip.rider.to_json())
+        # get the user id from the dictionary
+        userId = dictTripRider["_id"]["$oid"]
+
+
+        if not trip:
+            return jsonify({'error': 'Trip not found'}), 404
+
+        user = get_user_by_id(ObjectId(userId))
+
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        response_data = {
+            'name': user.first_name + " " + user.last_name,
         }
 
         return jsonify(response_data), 200

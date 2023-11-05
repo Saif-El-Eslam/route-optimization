@@ -79,7 +79,7 @@ def create_ride(data):
     return ride
 
 
-def get_ride(ride_id):
+def get_ride_by_id(ride_id):
     return Ride.objects(id=ride_id).first()
 
 
@@ -96,7 +96,7 @@ def get_all_rides():
 
 
 def update_ride(ride_id, data):
-    ride = get_ride(ride_id)
+    ride = get_ride_by_id(ride_id)
     if ride:
         for key, value in data.items():
             setattr(ride, key, value)
@@ -105,7 +105,7 @@ def update_ride(ride_id, data):
 
 
 def delete_ride(ride_id):
-    ride = get_ride(ride_id)
+    ride = get_ride_by_id(ride_id)
     if ride:
         ride.delete()
 
