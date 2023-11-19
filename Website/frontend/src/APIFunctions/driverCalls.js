@@ -34,6 +34,26 @@ export const getBusRoute = async () => {
   });
 };
 
+export const updateBusCurrentLocation = async (lat, lng) => {
+  return await axios.post(
+    "http://127.0.0.1:5000/update_current_location",{
+    "location": {
+      "coordinates": [
+          lng,
+          lat
+      ],
+  }
+  },{
+    headers: {
+      Authorization: `Bearer ${
+        JSON.parse(sessionStorage.getItem("user")).token
+      }`,
+    },
+  });
+}
+
+
+
 export const getCustomerNameByTripId = async (trip_id) => {
   return await axios.get(`http://127.0.0.1:5000/customer_name/${trip_id}`);
 };

@@ -42,6 +42,7 @@ def signup():
                 'email': email,
                 'password': hashed_password,
                 'verified': verified
+
             })
 
             response_data = {
@@ -105,7 +106,7 @@ def login():
                 updated_user = update_user(str(user.id), {'token': token})
             except Exception as e:
                 return jsonify({'error': str(e)}), 400
-
+            
             return jsonify({
                 'token': token,
                 'role': updated_user.role,

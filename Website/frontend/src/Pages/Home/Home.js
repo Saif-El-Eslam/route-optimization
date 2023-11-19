@@ -25,7 +25,8 @@ const Home = () => {
         sessionStorage.setItem("user", JSON.stringify(response.data));
         setLoggedIn(true);
 
-        if (response.data.role === 0) navigate("/get-locations");
+        if (response.data.role === 0 && !response.data.currentTrip) navigate("/get-locations");
+        else if (response.data.role === 0 && response.data.currentTrip) navigate("/ride");
         else if (response.data.role === 1) navigate("/buspath");
         else if (response.data.role === 2) navigate("/drivers-list");
       })

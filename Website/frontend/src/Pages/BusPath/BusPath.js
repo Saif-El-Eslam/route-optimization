@@ -7,6 +7,7 @@ import {
   // getMyBus,
   getCustomerNameByTripId,
   getBusRoute,
+  updateBusCurrentLocation,
 } from "../../APIFunctions/driverCalls";
 import { getAddress } from "../../APIFunctions/helperCalls";
 import Map from "../../Components/Map/map";
@@ -30,29 +31,66 @@ const BusPath = () => {
     address: "",
   });
   const [nextCustomer, setNextCustomer] = useState();
+  const [currentLocation, setCurrentLocation] = useState({
+    coordinates: [],
+    address: "",
+  });
+
+  const [mapKey, setMapKey] = useState(0); // State variable to trigger map refresh
+
+  const updateCurrentLocation = () => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        updateBusCurrentLocation(
+          // TODO: uncomment this
+          // position.coords.latitude,
+          // position.coords.longitude
+          30.8248,
+          30.82
+        )
+          .then((response) => {
+            if (response.status === 200) {
+              console.log("updated location");
+            }
+            setCurrentLocation({
+              ...currentLocation,
+              coordinates: [position.coords.longitude, position.coords.latitude],
+            });
+
+          })
+          .catch((error) => {
+            if (error.response) {
+              setErrors([...errors, error.response.data.error]);
+              setTimeout(() => {
+                setErrors(
+                  errors.filter((error) => error !== error.response.data.error)
+                );
+              }, 3000);
+            }
+          });
+      }
+    );
+  };
+
+  // TODO: Use this to update the current location of the bus (periodically)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      updateCurrentLocation();
+      // refresh the page
+      // window.location.reload();
+      setMapKey((prevKey) => prevKey + 1);
+    }, 7000); 
+    return () => clearInterval(interval);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Useeffect to update the map upon the current location of the bus
+  useEffect(() => {
+    if (currentLocation.coordinates.length !== 0) {
+      setMarkersPoints([...markersPoints, currentLocation.coordinates]);
+    }
+  }, [currentLocation.coordinates]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    // getMyBus()
-    //   .then((response) => {
-    //     if (response.status === 200) {
-    //       setBusInfo({
-    //         bus_id: response.data.bus_id,
-    //         capacity: response.data.capacity,
-    //         status: response.data.status,
-    //       });
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     if (error.response) {
-    //       setErrors([...errors, error.response.data.error]);
-    //       setTimeout(() => {
-    //         setErrors(
-    //           errors.filter((error) => error !== error.response.data.error)
-    //         );
-    //       }, 3000);
-    //     }
-    //   });
-
     getBusRoute()
       .then((response) => {
         if (response.status === 200) {
@@ -115,7 +153,8 @@ const BusPath = () => {
           }, 3000);
         }
       });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [currentLocation.coordinates]); // eslint-disable-line react-hooks/exhaustive-deps
+
 
   useEffect(() => {
     // get the addresses of the next location and next customer
@@ -138,7 +177,7 @@ const BusPath = () => {
           }, 3000);
         }
       });
-  }, [nextLocation.coordinates]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [nextLocation.coordinates]); 
 
   const handleActivateBus = () => {
     verifyBus(busInfo.status.toLowerCase() === "active" ? "inactive" : "active")
@@ -279,10 +318,13 @@ const BusPath = () => {
             className={!openInfo ? "dont-display" : "bus-path-map-container"}
           >
             {pathPoints.length !== 0 && markersPoints.length !== 0 && (
+
               <Map
+                key={mapKey}
                 path_points={pathPoints}
                 markers_points={markersPoints}
                 openInfo={openInfo}
+                currentLocation={currentLocation}
               />
             )}
           </div>

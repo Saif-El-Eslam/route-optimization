@@ -11,7 +11,8 @@ const RequestRide = () => {
   const [dropoffPath, setDropoffPath] = useState([]);
   const [wholePath, setWholePath] = useState([]);
   const [markers, setMarkers] = useState([]);
-
+  const [mapKey, setMapKey] = useState(0);
+  // TODO: get the data dynamically as it not updated periodically as it shoudlbe (look at the map key useEffect for more info)
   useEffect(() => {
     setPickupPath(JSON.parse(sessionStorage.getItem("ride")).pathToPickup);
     const pickupcoordinates = pickupPath[pickupPath.length - 1];
@@ -41,6 +42,14 @@ const RequestRide = () => {
     });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // update the map key every 10 seconds to force a re-render
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMapKey(mapKey + 1);
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [mapKey]);
+  
   useEffect(() => {
     setWholePath([...pickupPath, ...dropoffPath]);
     setMarkers([
@@ -136,6 +145,7 @@ const RequestRide = () => {
           <div className={!openInfo ? "dont-display" : "ride-map-container"}>
             {wholePath.length !== 0 && markers.length !== 0 && (
               <Map
+              key={mapKey}
                 path_points={wholePath}
                 markers_points={markers}
                 openInfo={openInfo}

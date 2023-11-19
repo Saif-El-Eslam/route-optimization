@@ -20,7 +20,9 @@ const Map = ({ path_points, markers_points, openInfo }) => {
       style: "mapbox://styles/mapbox/streets-v11",
       center: path_points[0],
       zoom: 12,
+      
     });
+
     // Add control tool on map
     map.addControl(new mapboxgl.NavigationControl());
     map.addControl(

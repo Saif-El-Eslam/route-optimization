@@ -58,7 +58,7 @@ def ride_request():
         print("dropoff_time: " + str(dropoff_time))
         updated_ride = update_ride(ride.id, {
              "pickup_time": pickup_time, "dropoff_time": dropoff_time})
-
+    
         # Create the response JSON
         response_data = {
             "tripId": str(updated_ride.id),
@@ -77,6 +77,7 @@ def ride_request():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
 
 @ride_request_bp.route("/bus_route", methods=["GET"])
 def get_bus_route():
@@ -97,6 +98,7 @@ def get_bus_route():
 
         route = bus.route
         route = route[1:-1]
+        print("route: " + str(route))
 
         locations = bus.locations
         current_location = bus.current_location
@@ -104,6 +106,7 @@ def get_bus_route():
         ordered_locations = []
         for i in route:
             ordered_locations.append(locations[i-1])
+        print("ordered_locations: " + str(ordered_locations))
         current_location_entry = {"trip_id": "current_location", "action": "current_location", "coordinates": current_location}
         ordered_locations.insert(0, current_location_entry)
         distance, duration, path = calcluate_trip_parmaters([i["coordinates"] for i in ordered_locations])
@@ -127,26 +130,134 @@ def get_bus_route():
         return jsonify({'error': str(e)}), 400
 
 
-
-# @ride_request_bp.route("/get_updates", methods=["GET"])
-# def get_trip_updates():
-#     # get user id , trip id from the body
-#     data = request.get_json()
-#     trip_id = data.get("tripId")
-#     distance_to_pickup, duration_to_pickup, path_to_pickup = get_trip_updates(trip_id)
-#     distance_to_dropoff, duration_to_dropoff, path_to_dropoff = get_trip_updates(trip_id)
+@ride_request_bp.route("/update_current_location", methods=["POST"])
+def update_location():
     
-#     response_data = {
-#         "distanceToPickup": distance_to_pickup,
-#         "durationToPickup": duration_to_pickup,
-#         "pathToPickup": path_to_pickup,
-#         "distanceToDropoff": distance_to_dropoff,
-#         "durationToDropoff": duration_to_dropoff,
-#         "pathToDropoff": path_to_dropoff
-#     }
-#     #TODO: update the ride in the database
-#     return jsonify(response_data)
+    bearer_token = request.headers.get('Authorization')
+    token = bearer_token.split(' ')[1]
+    try:
+        user = get_user_by_token(token)
+        if not user:
+            return jsonify({'error': 'Invalid token'}), 401
 
+        if user.role != 1:
+            return jsonify({'error': 'User is Unauthorized'}), 403
+
+        print("user.bus_id: " + str(user.bus_id))
+        bus = get_bus_by_id(user.bus_id)
+        if not bus:
+            return jsonify({'error': 'Bus not found'}), 404
+
+        data = request.get_json()
+        location = data.get("location").get("coordinates")
+        bus.current_location = location
+        bus.save()
+        
+        locations_list = bus.locations
+        current_location = bus.current_location
+        next_location_index = bus.route[1]
+        next_location = locations_list[next_location_index-1]
+        distance,duration,path = get_distance_between_two_loc(current_location, next_location["coordinates"])
+        print("distance: " + str(distance))
+        if distance < 0.1:
+            # remove the second location from the route
+            bus.route.pop(1)
+            #  drop next_location_index from the locations list
+            bus.locations.pop(0)
+            # update the locations list in the bus document
+            bus.locations = bus.locations
+            bus.save()
+            # update the status of the ride to "Active"
+            ride = get_ride_by_id(bus.assigned_trips[0])
+            ride.status = "Active"
+            ride.save()
+        elif distance < 0.1:
+            # remove the second location from the route
+            bus.route.pop(1)
+            # substact 1 from all the locations in the route for the next locations
+            for i in range(1, len(bus.route)):
+                if bus.route[i] > next_location_index:
+                    bus.route[i] -= 1
+
+            # TODO: update the time_window for the next locations
+            #  drop next_location_index from the locations list
+            bus.locations.pop(0)
+            # update the locations list in the bus document
+            bus.locations = bus.locations
+            bus.save()
+            # update the status of the ride to "Completed"
+            ride = get_ride_by_id(bus.assigned_trips[0])
+            ride.status = "Completed"
+            ride.save()
+            # remove the trip id from assigned_trips in the bus document
+            bus.assigned_trips.remove(ride.id)
+            bus.save()
+        return jsonify({"message": "Current location updated"}), 200
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+    
+
+
+# check bus arrival at pickup/dropoff location
+# @ride_request_bp.route("/check_arrival", methods=["POST"])
+# def check_arrival():
+#     bearer_token = request.headers.get('Authorization')
+#     token = bearer_token.split(' ')[1]
+#     #1. check if the distance between the current location and the first location in the list is less than 0.1 miles
+#     #2. if yes,
+#         # if the action is pickup, update the status of the ride to "Active"
+#         # if the action is dropoff, update the status of the ride to "Completed"
+#         # remove the first location from the list
+#         # update the locations list in the bus document
+#     #3. if no, return the current location
+#     try:
+#         user = get_user_by_token(token)
+#         if not user:
+#             return jsonify({'error': 'Invalid token'}), 401
+
+#         if user.role != 1:
+#             return jsonify({'error': 'User is Unauthorized'}), 403
+
+#         bus = get_bus_by_id(user.bus_id)
+#         if not bus:
+#             return jsonify({'error': 'Bus not found'}), 404
+
+#         locations_list = bus.locations
+#         current_location = bus.current_location
+#         next_location_index = bus.route[1]
+#         next_location = locations_list[next_location_index-1]
+#         distance_to_next_location, duration_to_next_location, path_to_next_location = calcluate_trip_parmaters([current_location, next_location["coordinates"]])
+#         if distance_to_next_location < 0.1:
+#             # remove the second location from the route
+#             bus.route.pop(1)
+#             #  drop next_location_index from the locations list
+#             locations_list.pop(next_location_index-1)
+#             # update the locations list in the bus document
+#             bus.locations = locations_list
+            
+#             bus.save()
+#             # update the status of the ride to "Active" or "Completed"
+#             if next_location["action"] == "pickup":
+#                 ride = get_ride_by_id(next_location["trip_id"])
+#                 ride.status = "Active"
+#                 ride.save()
+#             elif next_location["action"] == "dropoff":
+#                 ride = get_ride_by_id(next_location["trip_id"])
+#                 ride.status = "Completed"
+#                 ride.save()
+#                 # remove the trip id from assigned_trips in the bus document
+#                 bus.assigned_trips.remove(ride.id)
+#                 bus.save()
+#             return jsonify({"message": "Bus arrived at pickup/dropoff location"}), 200
+#         else:
+#             return jsonify({"error": "Bus not at pickup/dropoff location"}), 400
+        
+#     except Exception as e:
+#         return jsonify({'error': str(e)}), 400
+    
+
+        
 
 
 def get_trip_updates(trip_id):
@@ -193,14 +304,14 @@ def get_trip_updates(trip_id):
 
 def calcluate_trip_parmaters(locations_list):
     MAPBOX_TOKEN="pk.eyJ1IjoiYWhtZWR5MTU1MjAwIiwiYSI6ImNsamw4cDM3NDAzejAzZG1uc2Y4MGJ4aWIifQ.9z0OvMdr2pISeiDFf4ufTw"
-    print("locations_list: " + str(locations_list))
+    # print("locations_list: " + str(locations_list))
     # get duration between stops
     max_locations_list = 25  # Maximum number of locations_list per API request
     num_requests = (len(locations_list) - 1) // (max_locations_list - 1) + 1  # Number of API requests needed
     distance=0
     duration=0
     path=[]
-    print("num_requests: " + str(num_requests))
+    # print("num_requests: " + str(num_requests))
     for req in range(num_requests):
         start = req * (max_locations_list - 1)
         end = min(start + max_locations_list, len(locations_list))
@@ -211,7 +322,7 @@ def calcluate_trip_parmaters(locations_list):
 
         URL = URL[:-1]
         URL+="?alternatives=false&geometries=geojson&language=en&overview=full&steps=false&access_token=pk.eyJ1IjoiYWhtZWR5MTU1MjAwIiwiYSI6ImNsamw4cDM3NDAzejAzZG1uc2Y4MGJ4aWIifQ.9z0OvMdr2pISeiDFf4ufTw"
-        print("URL: " + str(URL))
+        # print("URL: " + str(URL))
         response = requests.get(URL)
     
         if response.status_code == 200:
@@ -222,6 +333,28 @@ def calcluate_trip_parmaters(locations_list):
             path_coordinates = data['routes'][0]['geometry']['coordinates']
             path.extend(path_coordinates)
     return distance,duration,path
+
+
+def get_distance_between_two_loc(loc1, loc2):
+    URL = 'https://api.mapbox.com/directions/v5/mapbox/driving/'
+    URL += "{},{};{},".format(loc1[0], loc1[1], loc2[0], loc2[1])
+    URL = URL[:-1]
+    URL += "?alternatives=false&geometries=geojson&language=en&overview=full&steps=false&access_token=pk.eyJ1IjoiYWhtZWR5MTU1MjAwIiwiYSI6ImNsamw4cDM3NDAzejAzZG1uc2Y4MGJ4aWIifQ.9z0OvMdr2pISeiDFf4ufTw"
+
+    response = requests.get(URL)
+
+    distance = 0
+    duration = 0
+    path = []
+
+    if response.status_code == 200:
+        data = response.json()
+        distance += data['routes'][0]['distance'] * 0.000621371
+        duration += data['routes'][0]['duration'] / 60
+        path_coordinates = data['routes'][0]['geometry']['coordinates']
+        path.extend(path_coordinates)
+
+    return distance, duration, path
 
 if __name__ == "__main__":
     ride_request_bp.run(debug=True)
