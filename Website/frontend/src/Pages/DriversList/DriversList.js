@@ -30,7 +30,7 @@ const DriversList = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleVerify = (userId, verify) => {
-    verifyUser(verify)
+    verifyUser(userId, verify)
       .then((response) => {
         if (response.status === 200) {
           setUsers(

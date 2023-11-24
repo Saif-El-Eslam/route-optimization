@@ -46,14 +46,19 @@ def verify_user():
 
     data = request.get_json()
     verify = data.get('verify')
+    user_id = data.get('user_id')
 
     try:
-        user = get_user_by_token(token)
-        if not user:
-            return jsonify({'error': 'Invalid token'}), 401
+        admin = get_user_by_token(token)
+        if not admin:
+            return jsonify({'error': 'Invalid token for admin'}), 401
 
-        if user.role != 2:
+        if admin.role != 2:
             return jsonify({'error': 'User is Unauthorized'}), 403
+
+        user = get_user_by_id(user_id)
+        if not user:
+            return jsonify({'error': 'Invalid user id'}), 400
 
         updated_user = update_user(user.id, {'verified': verify})
         response_data = {
