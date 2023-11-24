@@ -3,61 +3,105 @@ import "./Ride.css";
 import Header from "../../Components/Header/Header";
 import { useState } from "react";
 import Map from "../../Components/Map/map";
+import { getRideInfo } from "../../APIFunctions/riderCalls.js";
+import { getAddress } from "../../APIFunctions/helperCalls.js";
 
 const RequestRide = () => {
   const [openInfo, setOpenInfo] = useState(true);
   const [rideInfo, setRideInfo] = useState();
   const [pickupPath, setPickupPath] = useState([]);
   const [dropoffPath, setDropoffPath] = useState([]);
+  const [pickupAddress, setPickupAddress] = useState();
+  const [dropoffAddress, setDropoffAddress] = useState();
   const [wholePath, setWholePath] = useState([]);
   const [markers, setMarkers] = useState([]);
   const [mapKey, setMapKey] = useState(0);
   // TODO: get the data dynamically as it not updated periodically as it shoudlbe (look at the map key useEffect for more info)
+  // useEffect(() => {
+  //   setPickupPath(JSON.parse(sessionStorage.getItem("ride"))?.pathToPickup);
+  //   const pickupcoordinates = pickupPath[pickupPath.length - 1];
+
+  //   setDropoffPath(JSON.parse(sessionStorage.getItem("ride"))?.pathToDropoff);
+  //   const dropoffCoordinates = dropoffPath[dropoffPath.length - 1];
+
+  //   setRideInfo({
+  //     assignedBus: JSON.parse(sessionStorage.getItem("ride"))?.busId,
+  //     pickupLocation: {
+  //       address: JSON.parse(sessionStorage.getItem("ride"))?.pickupAddress,
+  //       coordinates: pickupcoordinates,
+  //     },
+  //     dropoffLocation: {
+  //       address: JSON.parse(sessionStorage.getItem("ride"))?.dropoffAddress,
+  //       coordinates: dropoffCoordinates,
+  //     },
+  //     timeToPickup: JSON.parse(sessionStorage.getItem("ride"))
+  //       ?.durationToPickup,
+  //     timeToDropoff: JSON.parse(sessionStorage.getItem("ride"))
+  //       ?.durationToDropoff,
+  //     distanceToPickup: JSON.parse(sessionStorage.getItem("ride"))
+  //       ?.distanceToPickup,
+  //     distanceToDropoff: JSON.parse(sessionStorage.getItem("ride"))
+  //       ?.distanceToDropoff,
+
+  //     // passengerCount: 1,
+  //   });
+  // }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // // update the map key every 10 seconds to force a re-render
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setMapKey(mapKey + 1);
+  //   }, 10000);
+  //   return () => clearInterval(interval);
+  // }, [mapKey]);
+
+  // useEffect(() => {
+  //   setWholePath([...pickupPath, ...dropoffPath]);
+  //   setMarkers([
+  //     pickupPath[0],
+  //     pickupPath[pickupPath.length - 1],
+  //     dropoffPath[dropoffPath.length - 1],
+  //   ]);
+  // }, [pickupPath, dropoffPath]);
+
   useEffect(() => {
-    setPickupPath(JSON.parse(sessionStorage.getItem("ride")).pathToPickup);
-    const pickupcoordinates = pickupPath[pickupPath.length - 1];
-
-    setDropoffPath(JSON.parse(sessionStorage.getItem("ride")).pathToDropoff);
-    const dropoffCoordinates = dropoffPath[dropoffPath.length - 1];
-
-    setRideInfo({
-      assignedBus: JSON.parse(sessionStorage.getItem("ride")).busId,
-      pickupLocation: {
-        address: JSON.parse(sessionStorage.getItem("ride")).pickupAddress,
-        coordinates: pickupcoordinates,
-      },
-      dropoffLocation: {
-        address: JSON.parse(sessionStorage.getItem("ride")).dropoffAddress,
-        coordinates: dropoffCoordinates,
-      },
-      timeToPickup: JSON.parse(sessionStorage.getItem("ride")).durationToPickup,
-      timeToDropoff: JSON.parse(sessionStorage.getItem("ride"))
-        .durationToDropoff,
-      distanceToPickup: JSON.parse(sessionStorage.getItem("ride"))
-        .distanceToPickup,
-      distanceToDropoff: JSON.parse(sessionStorage.getItem("ride"))
-        .distanceToDropoff,
-
-      // passengerCount: 1,
-    });
+    getRideInfo()
+      .then((response) => {
+        if (response.status === 200) {
+          setRideInfo(response.data);
+          // setPickupPath(response.data.pathToPickup);
+          // setDropoffPath(response.data.pathToDropoff);
+          // console.log(response.data);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // update the map key every 10 seconds to force a re-render
   useEffect(() => {
-    const interval = setInterval(() => {
-      setMapKey(mapKey + 1);
-    }, 10000);
-    return () => clearInterval(interval);
-  }, [mapKey]);
-  
-  useEffect(() => {
-    setWholePath([...pickupPath, ...dropoffPath]);
-    setMarkers([
-      pickupPath[0],
-      pickupPath[pickupPath.length - 1],
-      dropoffPath[dropoffPath.length - 1],
-    ]);
-  }, [pickupPath, dropoffPath]);
+    if (rideInfo?.pickup_coordinates && rideInfo?.dropoff_coordinates) {
+      getAddress(rideInfo.pickup_coordinates)
+        .then((response) => {
+          if (response.status === 200) {
+            setPickupAddress(response.data.features[0].place_name);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      getAddress(rideInfo.dropoff_coordinates)
+        .then((response) => {
+          if (response.status === 200) {
+            setDropoffAddress(response.data.features[0].place_name);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [rideInfo]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>
@@ -78,7 +122,7 @@ const RequestRide = () => {
                 <div className="ride-info-item">
                   <div className="ride-info-item-header">Bus:</div>
                   <div className="ride-info-item-content">
-                    {rideInfo?.assignedBus}
+                    {rideInfo?.busId}
                   </div>
                 </div>
 
@@ -86,7 +130,7 @@ const RequestRide = () => {
                   <div className="ride-info-item-header">From:</div>
                   <div className="ride-info-item-content">
                     <div className="ride-info-item-content-address">
-                      {rideInfo?.pickupLocation?.address}
+                      {pickupAddress}
                     </div>
                     {/* <div className="ride-info-item-content-city">City, State</div> */}
                   </div>
@@ -95,7 +139,7 @@ const RequestRide = () => {
                   <div className="ride-info-item-header">To:</div>
                   <div className="ride-info-item-content">
                     <div className="ride-info-item-content-address">
-                      {rideInfo?.dropoffLocation?.address}
+                      {dropoffAddress}
                     </div>
                     {/* <div className="ride-info-item-content-city">City, State</div> */}
                   </div>
@@ -105,7 +149,7 @@ const RequestRide = () => {
                   <div className="ride-info-item-content">
                     {Math.round(rideInfo?.timeToPickup)} min
                     <span style={{ fontWeight: "bold" }}>
-                      (~{rideInfo?.distanceToPickup.toFixed(2)} KM)
+                      (~{rideInfo?.distanceToPickup?.toFixed(2)} KM)
                     </span>
                   </div>
                 </div>
@@ -117,7 +161,7 @@ const RequestRide = () => {
                     )}{" "}
                     min
                     <span style={{ fontWeight: "bold" }}>
-                      (~{rideInfo?.distanceToDropoff.toFixed(2)} KM)
+                      (~{rideInfo?.distanceToDropoff?.toFixed(2)} KM)
                     </span>
                   </div>
                 </div>
@@ -145,7 +189,7 @@ const RequestRide = () => {
           <div className={!openInfo ? "dont-display" : "ride-map-container"}>
             {wholePath.length !== 0 && markers.length !== 0 && (
               <Map
-              key={mapKey}
+                key={mapKey}
                 path_points={wholePath}
                 markers_points={markers}
                 openInfo={openInfo}

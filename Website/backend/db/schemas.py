@@ -52,6 +52,8 @@ class User(Document):
     verified = BooleanField()
     token = StringField(max_length=200)
 
+    ride_id = StringField(max_length=50)
+
 
 # class Rider(Document):
 #     username = StringField(max_length=50)

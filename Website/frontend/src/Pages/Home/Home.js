@@ -23,11 +23,20 @@ const Home = () => {
       .then((response) => {
         // set user in session storage
         sessionStorage.setItem("user", JSON.stringify(response.data));
+        console.log(response.ride_id && response.ride_id !== "");
         setLoggedIn(true);
 
-        if (response.data.role === 0 && !response.data.currentTrip)
+        if (
+          response.data.role === 0 &&
+          !response.data.ride_id &&
+          response.data.ride_id === ""
+        )
           navigate("/get-locations");
-        else if (response.data.role === 0 && response.data.currentTrip)
+        else if (
+          response.data.role === 0 &&
+          response.data.ride_id &&
+          response.data.ride_id !== ""
+        )
           navigate("/ride");
         else if (response.data.role === 1) navigate("/buspath");
         else if (response.data.role === 2) navigate("/drivers-list");

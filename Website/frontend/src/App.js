@@ -37,10 +37,12 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        {user?.role === 0 && (
+        {user?.role === 0 && !user?.ride_id && user?.ride_id === "" && (
           <Route path="/get-locations" element={<GetLocations />} />
         )}
-        {user?.role === 0 && <Route path="/ride" element={<RequestRide />} />}
+        {user?.role === 0 && user?.ride_id && user?.ride_id !== "" && (
+          <Route path="/ride" element={<RequestRide />} />
+        )}
         {user?.role === 1 && <Route path="/buspath" element={<BusPath />} />}
         {user?.role === 2 && (
           <Route path="/drivers-list" element={<DriversList />} />

@@ -112,6 +112,8 @@ def login():
                 'role': updated_user.role,
                 'first_name': updated_user.first_name,
                 'last_name': updated_user.last_name,
+                'email': updated_user.email,
+                'ride_id': updated_user.ride_id
             }), 200
         else:
             return jsonify({'error': 'Invalid credentials'}), 401
@@ -124,7 +126,7 @@ def login():
 def logout():
     bearer_token = request.headers.get('Authorization')
     token = bearer_token.split(' ')[1]
-
+    
     try:
         user = get_user_by_token(token)
         if user.token and user.token != "":

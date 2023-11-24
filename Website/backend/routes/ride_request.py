@@ -58,6 +58,8 @@ def ride_request():
         print("dropoff_time: " + str(dropoff_time))
         updated_ride = update_ride(ride.id, {
              "pickup_time": pickup_time, "dropoff_time": dropoff_time})
+        # e. Update the User document
+        updated_user = update_user(retrieved_user.id, {"ride_id": ride.id}) 
     
         # Create the response JSON
         response_data = {
@@ -196,8 +198,48 @@ def update_location():
     
     except Exception as e:
         return jsonify({'error': str(e)}), 400
-    
+ 
+# get ride info for the rider
+@ride_request_bp.route("/ride_info", methods=["GET"])
+def get_ride_info():
+    bearer_token = request.headers.get('Authorization')
+    token = bearer_token.split(' ')[1]
+    try:
+        user = get_user_by_token(token)
+        if not user:
+            return jsonify({'error': 'Invalid token'}), 401
+        if user.role != 0:
+            return jsonify({'error': 'User is Unauthorized'}), 403
+        
 
+        ride = get_ride_by_id(user.ride_id)
+        if not ride:
+            return jsonify({'error': 'Ride not found'}), 404
+        
+
+        # distance_to_pickup, duration_to_pickup, path_to_pickup, distance_to_dropoff, duration_to_dropoff, path_to_dropoff = get_trip_updates(ride.id)
+        # send the response(distance, duration, path, ordered_locations)
+        # convert object id to string
+        response_data = {
+            "tripId": str(ride.id),
+            "busId": ride.bus.bus_id,
+            # "capacity": bus.capacity,
+            "pickup_coordinates": ride.start_location,
+            "dropoff_coordinates": ride.end_location,
+            "status": ride.status,
+            # "pickupTime": pickup_time,
+            # "dropoffTime": dropoff_time,
+            # "distanceToPickup": distance_to_pickup,
+            # "durationToPickup": duration_to_pickup,
+            # "pathToPickup": path_to_pickup,
+            # "distanceToDropoff": distance_to_dropoff,
+            # "durationToDropoff": duration_to_dropoff,
+            # "pathToDropoff": path_to_dropoff
+        }
+        return jsonify(response_data)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
 
 # check bus arrival at pickup/dropoff location
 # @ride_request_bp.route("/check_arrival", methods=["POST"])

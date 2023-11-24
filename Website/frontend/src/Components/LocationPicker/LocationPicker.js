@@ -3,7 +3,7 @@ import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "./LocationPicker.css";
 import { useNavigate } from "react-router-dom";
-import { reqestRide } from "../../APIFunctions/DBFunctions.js";
+import { reqestRide } from "../../APIFunctions/riderCalls.js";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiaGFuZy1obyIsImEiOiJjbDA2M3F6bm4xcW05M2RvZHhpeDFsZTVvIn0.Ot8ZrqGcvLYWRLzyXtkUdA";

@@ -27,9 +27,14 @@ const Header = () => {
       </Link>
 
       <div className="header-links">
-        {user?.role === 0 && (
+        {user?.role === 0 && !user?.ride_id && user.ride_id === "" && (
           <Link to="/get-locations">
             <div className="header-link">Request a Ride</div>
+          </Link>
+        )}
+        {user?.role === 0 && user?.ride_id && user.ride_id !== "" && (
+          <Link to="/ride">
+            <div className="header-link">My Ride</div>
           </Link>
         )}
         {user?.role === 1 && (
