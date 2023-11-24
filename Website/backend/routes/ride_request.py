@@ -218,17 +218,13 @@ def get_ride_info():
         
 
         # distance_to_pickup, duration_to_pickup, path_to_pickup, distance_to_dropoff, duration_to_dropoff, path_to_dropoff = get_trip_updates(ride.id)
-        # send the response(distance, duration, path, ordered_locations)
-        # convert object id to string
         response_data = {
             "tripId": str(ride.id),
             "busId": ride.bus.bus_id,
-            # "capacity": bus.capacity,
+            # "capacity": bus.capacity, # Not Now
             "pickup_coordinates": ride.start_location,
             "dropoff_coordinates": ride.end_location,
             "status": ride.status,
-            # "pickupTime": pickup_time,
-            # "dropoffTime": dropoff_time,
             # "distanceToPickup": distance_to_pickup,
             # "timeToPickup": duration_to_pickup,
             # "pathToPickup": path_to_pickup,
