@@ -230,10 +230,10 @@ def get_ride_info():
             # "pickupTime": pickup_time,
             # "dropoffTime": dropoff_time,
             # "distanceToPickup": distance_to_pickup,
-            # "durationToPickup": duration_to_pickup,
+            # "timeToPickup": duration_to_pickup,
             # "pathToPickup": path_to_pickup,
             # "distanceToDropoff": distance_to_dropoff,
-            # "durationToDropoff": duration_to_dropoff,
+            # "timeToDropoff": duration_to_dropoff,
             # "pathToDropoff": path_to_dropoff
         }
         return jsonify(response_data)

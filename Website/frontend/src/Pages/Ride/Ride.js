@@ -15,55 +15,9 @@ const RequestRide = () => {
   const [dropoffAddress, setDropoffAddress] = useState();
   const [wholePath, setWholePath] = useState([]);
   const [markers, setMarkers] = useState([]);
+  const [errors, setErrors] = useState([]);
   const [mapKey, setMapKey] = useState(0);
   // TODO: get the data dynamically as it not updated periodically as it shoudlbe (look at the map key useEffect for more info)
-  // useEffect(() => {
-  //   setPickupPath(JSON.parse(sessionStorage.getItem("ride"))?.pathToPickup);
-  //   const pickupcoordinates = pickupPath[pickupPath.length - 1];
-
-  //   setDropoffPath(JSON.parse(sessionStorage.getItem("ride"))?.pathToDropoff);
-  //   const dropoffCoordinates = dropoffPath[dropoffPath.length - 1];
-
-  //   setRideInfo({
-  //     assignedBus: JSON.parse(sessionStorage.getItem("ride"))?.busId,
-  //     pickupLocation: {
-  //       address: JSON.parse(sessionStorage.getItem("ride"))?.pickupAddress,
-  //       coordinates: pickupcoordinates,
-  //     },
-  //     dropoffLocation: {
-  //       address: JSON.parse(sessionStorage.getItem("ride"))?.dropoffAddress,
-  //       coordinates: dropoffCoordinates,
-  //     },
-  //     timeToPickup: JSON.parse(sessionStorage.getItem("ride"))
-  //       ?.durationToPickup,
-  //     timeToDropoff: JSON.parse(sessionStorage.getItem("ride"))
-  //       ?.durationToDropoff,
-  //     distanceToPickup: JSON.parse(sessionStorage.getItem("ride"))
-  //       ?.distanceToPickup,
-  //     distanceToDropoff: JSON.parse(sessionStorage.getItem("ride"))
-  //       ?.distanceToDropoff,
-
-  //     // passengerCount: 1,
-  //   });
-  // }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // // update the map key every 10 seconds to force a re-render
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setMapKey(mapKey + 1);
-  //   }, 10000);
-  //   return () => clearInterval(interval);
-  // }, [mapKey]);
-
-  // useEffect(() => {
-  //   setWholePath([...pickupPath, ...dropoffPath]);
-  //   setMarkers([
-  //     pickupPath[0],
-  //     pickupPath[pickupPath.length - 1],
-  //     dropoffPath[dropoffPath.length - 1],
-  //   ]);
-  // }, [pickupPath, dropoffPath]);
-
   useEffect(() => {
     getRideInfo()
       .then((response) => {
@@ -75,9 +29,33 @@ const RequestRide = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        if (error.response) {
+          setErrors([...errors, error.response.data.error]);
+          setTimeout(() => {
+            setErrors(
+              errors.filter((error) => error !== error.response.data.error)
+            );
+          }, 3000);
+        }
       });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // // update the map key every 10 seconds to force a re-render
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMapKey(mapKey + 1);
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [mapKey]);
+
+  useEffect(() => {
+    setWholePath([...pickupPath, ...dropoffPath]);
+    setMarkers([
+      pickupPath[0],
+      pickupPath[pickupPath.length - 1],
+      dropoffPath[dropoffPath.length - 1],
+    ]);
+  }, [pickupPath, dropoffPath]);
 
   useEffect(() => {
     if (rideInfo?.pickup_coordinates && rideInfo?.dropoff_coordinates) {
@@ -88,7 +66,14 @@ const RequestRide = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          if (error.response) {
+            setErrors([...errors, error.response.data.error]);
+            setTimeout(() => {
+              setErrors(
+                errors.filter((error) => error !== error.response.data.error)
+              );
+            }, 3000);
+          }
         });
 
       getAddress(rideInfo.dropoff_coordinates)
@@ -98,7 +83,14 @@ const RequestRide = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          if (error.response) {
+            setErrors([...errors, error.response.data.error]);
+            setTimeout(() => {
+              setErrors(
+                errors.filter((error) => error !== error.response.data.error)
+              );
+            }, 3000);
+          }
         });
     }
   }, [rideInfo]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -118,6 +110,16 @@ const RequestRide = () => {
             </div>
             <div className="ride-info-container">
               <div className="ride-info-header">Ride Info</div>
+
+              <div className="errors">
+                {errors &&
+                  errors.map((error, i) => (
+                    <div key={i} className="error">
+                      {error}
+                    </div>
+                  ))}
+              </div>
+
               <div className="ride-info-content">
                 <div className="ride-info-item">
                   <div className="ride-info-item-header">Bus:</div>

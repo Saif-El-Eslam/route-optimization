@@ -43,3 +43,10 @@
   font-size: 1rem;
   font-weight: 600;
 }
+
+.errors {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
