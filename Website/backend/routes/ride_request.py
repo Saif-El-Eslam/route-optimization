@@ -41,11 +41,12 @@ def ride_request():
         # 2. find the best bus to assign to the ride
         # a. get all the buses and their current locations from the database (Bus document)
         # b. find the best bus to assign to the ride (best_bus = find_best_bus(buses, ride))
-        best_bus = find_best_bus(buses, ride)
-        if best_bus is None:
-            # delete the ride request from the database
+        try:
+            best_bus = find_best_bus(buses, ride)
+        except Exception as e:
             delete_ride(ride.id)
-            return jsonify({"error": "No bus available"}), 400
+            return jsonify({"error": str(e)}), 400
+                
         
         # c. Update the Bus document
         updated_bus = update_bus(best_bus.bus_id, best_bus.to_mongo())
