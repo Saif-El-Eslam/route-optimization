@@ -47,6 +47,10 @@ def ride_request():
             delete_ride(ride.id)
             return jsonify({"error": str(e)}), 400
                 
+        if best_bus is None:
+            # delete the ride request from the database
+            delete_ride(ride.id)
+            return jsonify({"error": "No bus available"}), 400
         
         # c. Update the Bus document
         updated_bus = update_bus(best_bus.bus_id, best_bus.to_mongo())
@@ -62,7 +66,7 @@ def ride_request():
         updated_ride = update_ride(ride.id, {
              "pickup_time": pickup_time, "dropoff_time": dropoff_time})
         # e. Update the User document
-        updated_user = update_user(retrieved_user.id, {"ride_id": ride.id}) 
+        updated_user = update_user(retrieved_user.id, {"ride_id": str(ride.id)})
     
         # Create the response JSON
         response_data = {

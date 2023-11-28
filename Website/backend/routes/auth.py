@@ -41,7 +41,7 @@ def signup():
                 'last_name': last_name,
                 'email': email,
                 'password': hashed_password,
-                'verified': verified
+                'verified': verified,
 
             })
 

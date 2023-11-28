@@ -346,6 +346,12 @@ def find_best_bus(buses, request):
             # bus_time_windows[0]= [700, 700]
             time_windows = bus.time_windows + request_time_window
             # print("time windows", time_windows)
+            print("coordinates_list: " + str(coordinates_list))
+            print("time_windows: " + str(time_windows))
+            print("max_pickup_delay: " + str(max_pickup_delay))
+            print("max_dropoff_delay: " + str(max_dropoff_delay))
+            print("waiting_time: " + str(waiting_time))
+            print("bus.capacity: " + str(bus.capacity))
             result = VRP_pickup_dropoff_TW(
                 coordinates_list,
                 time_windows,
@@ -354,6 +360,7 @@ def find_best_bus(buses, request):
                 waiting_time,
                 bus.capacity
             )
+            print("result: " + str(result))
             if result[1] < shortest_distance:
                 shortest_distance = result[1]
                 best_bus = bus
