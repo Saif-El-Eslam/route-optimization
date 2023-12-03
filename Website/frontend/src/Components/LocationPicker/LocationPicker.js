@@ -117,10 +117,13 @@ const LocationPicker = ({
         const ride = response;
         ride.pickupAddress = pickupLocation.address;
         ride.dropoffAddress = dropoffLocation.address;
-        sessionStorage.setItem("ride", JSON.stringify(ride));
-        console.log(response);
 
-        // navigate to next page
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        user.ride_id = response.tripId;
+
+        sessionStorage.setItem("ride", JSON.stringify(ride));
+        sessionStorage.setItem("user", JSON.stringify(user));
+
         navigate("/ride");
       } else {
         setConfirmed(false);

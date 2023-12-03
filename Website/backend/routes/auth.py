@@ -42,7 +42,7 @@ def signup():
                 'email': email,
                 'password': hashed_password,
                 'verified': verified,
-
+                'ride_id': ""
             })
 
             response_data = {
@@ -50,7 +50,8 @@ def signup():
                 'first_name': created_user.first_name,
                 'last_name': created_user.last_name,
                 'email': created_user.email,
-                'verified': created_user.verified
+                'verified': created_user.verified,
+                'ride_id': ""
             }
         elif role == 1:
             created_user = create_user({

@@ -224,7 +224,7 @@ def get_ride_info():
             return jsonify({'error': 'Ride not found'}), 404
         
 
-        # distance_to_pickup, duration_to_pickup, path_to_pickup, distance_to_dropoff, duration_to_dropoff, path_to_dropoff = get_trip_updates(ride.id)
+        distance_to_pickup, duration_to_pickup, path_to_pickup, distance_to_dropoff, duration_to_dropoff, path_to_dropoff = get_trip_updates(ride.id)
         response_data = {
             "tripId": str(ride.id),
             "busId": ride.bus.bus_id,
@@ -232,12 +232,12 @@ def get_ride_info():
             "pickup_coordinates": ride.start_location,
             "dropoff_coordinates": ride.end_location,
             "status": ride.status,
-            # "distanceToPickup": distance_to_pickup,
-            # "timeToPickup": duration_to_pickup,
-            # "pathToPickup": path_to_pickup,
-            # "distanceToDropoff": distance_to_dropoff,
-            # "timeToDropoff": duration_to_dropoff,
-            # "pathToDropoff": path_to_dropoff
+            "distanceToPickup": distance_to_pickup,
+            "timeToPickup": duration_to_pickup,
+            "pathToPickup": path_to_pickup,
+            "distanceToDropoff": distance_to_dropoff,
+            "timeToDropoff": duration_to_dropoff,
+            "pathToDropoff": path_to_dropoff
         }
         return jsonify(response_data)
 

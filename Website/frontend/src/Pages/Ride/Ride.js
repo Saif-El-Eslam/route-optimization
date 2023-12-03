@@ -23,9 +23,9 @@ const RequestRide = () => {
       .then((response) => {
         if (response.status === 200) {
           setRideInfo(response.data);
-          // setPickupPath(response.data.pathToPickup);
-          // setDropoffPath(response.data.pathToDropoff);
-          // console.log(response.data);
+          setPickupPath(response.data.pathToPickup);
+          setDropoffPath(response.data.pathToDropoff);
+          console.log(response.data);
         }
       })
       .catch((error) => {
