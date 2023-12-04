@@ -14,10 +14,6 @@ def get_not_verified_users():
 
     try:
         user = get_user_by_token(token)
-        if isinstance(user, str):
-            user = json.loads(user)
-            print("CONVERTED TO OBJECT")
-
         if not user:
             return jsonify({'error': 'Invalid token'}), 401
 
