@@ -1,0 +1,15 @@
+flask
+flask_cors
+mongoengine
+pymongo
+PyJWT
+datetime
+bcrypt
+pytz
+requests
+pandas
+googlemaps
+ortools
+networkx
+tkintermapview
+gunicorn
