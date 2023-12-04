@@ -15,7 +15,7 @@ export const signUp = async (userType, formData) => {
     user.license_number = formData.licenseNumber;
   }
 
-  return axios.post(`${process.env.REACT_APP_API_URL}/signup`, user);
+  return axios.post("http://127.0.0.1:5000/signup", user);
 };
 
 export const login = async (formData) => {
@@ -24,12 +24,12 @@ export const login = async (formData) => {
     password: formData.password,
   };
 
-  return axios.post(`${process.env.REACT_APP_API_URL}/login`, user);
+  return axios.post("http://127.0.0.1:5000/login", user);
 };
 
 export const logout = async () => {
   return axios.post(
-    `${process.env.REACT_APP_API_URL}/logout`,
+    "http://127.0.0.1:5000/logout",
     {},
     {
       headers: {

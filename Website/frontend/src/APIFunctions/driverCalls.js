@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const getMyBus = async () => {
-  return await axios.get(`${process.env.REACT_APP_API_URL}/my-bus`, {
+  return await axios.get("http://127.0.0.1:5000/my-bus", {
     headers: {
       Authorization: `Bearer ${
         JSON.parse(sessionStorage.getItem("user")).token
@@ -12,7 +12,7 @@ export const getMyBus = async () => {
 
 export const verifyBus = async (verify) => {
   return await axios.post(
-    `${process.env.REACT_APP_API_URL}/verify-bus`,
+    "http://127.0.0.1:5000/verify-bus",
     { verify: verify },
     {
       headers: {
@@ -25,7 +25,7 @@ export const verifyBus = async (verify) => {
 };
 
 export const getBusRoute = async () => {
-  return await axios.get(`${process.env.REACT_APP_API_URL}/bus_route`, {
+  return await axios.get("http://127.0.0.1:5000/bus_route", {
     headers: {
       Authorization: `Bearer ${
         JSON.parse(sessionStorage.getItem("user")).token
@@ -36,24 +36,24 @@ export const getBusRoute = async () => {
 
 export const updateBusCurrentLocation = async (lat, lng) => {
   return await axios.post(
-    `${process.env.REACT_APP_API_URL}/update_current_location`,
-    {
-      location: {
-        coordinates: [lng, lat],
-      },
+    "http://127.0.0.1:5000/update_current_location",{
+    "location": {
+      "coordinates": [
+          lng,
+          lat
+      ],
+  }
+  },{
+    headers: {
+      Authorization: `Bearer ${
+        JSON.parse(sessionStorage.getItem("user")).token
+      }`,
     },
-    {
-      headers: {
-        Authorization: `Bearer ${
-          JSON.parse(sessionStorage.getItem("user")).token
-        }`,
-      },
-    }
-  );
-};
+  });
+}
+
+
 
 export const getCustomerNameByTripId = async (trip_id) => {
-  return await axios.get(
-    `${process.env.REACT_APP_API_URL}/customer_name/${trip_id}`
-  );
+  return await axios.get(`http://127.0.0.1:5000/customer_name/${trip_id}`);
 };
