@@ -26,20 +26,21 @@ const Home = () => {
         console.log(response.ride_id && response.ride_id !== "");
         setLoggedIn(true);
 
-        if (
-          response.data.role === 0 &&
-          !response.data.ride_id &&
-          response.data.ride_id === ""
-        )
-          navigate("/get-locations");
-        else if (
-          response.data.role === 0 &&
-          response.data.ride_id &&
-          response.data.ride_id !== ""
-        )
-          navigate("/ride");
-        else if (response.data.role === 1) navigate("/buspath");
-        else if (response.data.role === 2) navigate("/drivers-list");
+        // if (
+        //   response.data.role === 0 &&
+        //   !response.data.ride_id &&
+        //   response.data.ride_id === ""
+        // )
+        //   navigate("/get-locations");
+        // else if (
+        //   response.data.role === 0 &&
+        //   response.data.ride_id &&
+        //   response.data.ride_id !== ""
+        // )
+        //   navigate("/ride");
+        // else if (response.data.role === 1) navigate("/buspath");
+        // else if (response.data.role === 2) navigate("/drivers-list");
+        navigate("/");
       })
       .catch((error) => {
         if (error.response) {
