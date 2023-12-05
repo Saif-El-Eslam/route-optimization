@@ -1,11 +1,13 @@
 import React from "react";
 import "./NotFound.css";
 import Header from "../../Components/Header/Header";
+import { useNavigate } from "react-router-dom";
 
 const NotFound = () => {
+  const navigate = useNavigate();
   // direct to home page after 3 seconds
   setTimeout(() => {
-    window.location.href = "/";
+    navigate("/");
   }, 3000);
 
   return (
