@@ -348,7 +348,7 @@ def get_trip_updates(trip_id):
     return distance_to_pickup, duration_to_pickup, path_to_pickup, distance_to_dropoff, duration_to_dropoff, path_to_dropoff
 
 def calcluate_trip_parmaters(locations_list):
-    MAPBOX_TOKEN="pk.eyJ1IjoiYWhtZWR5MTU1MjAwIiwiYSI6ImNsamw4cDM3NDAzejAzZG1uc2Y4MGJ4aWIifQ.9z0OvMdr2pISeiDFf4ufTw"
+    MAPBOX_TOKEN="pk.eyJ1IjoiYWhtZWR5MTU1MjAwIiwiYSI6ImNscHU2anR0cjBrMjYyam1samJqN3Y5ZHcifQ.rI8SUfxadkqVpvemVZdvPw"
     # print("locations_list: " + str(locations_list))
     # get duration between stops
     max_locations_list = 25  # Maximum number of locations_list per API request
@@ -366,7 +366,7 @@ def calcluate_trip_parmaters(locations_list):
             URL += "{},{};".format(locations_list[i][0], locations_list[i][1])
 
         URL = URL[:-1]
-        URL+="?alternatives=false&geometries=geojson&language=en&overview=full&steps=false&access_token=pk.eyJ1IjoiYWhtZWR5MTU1MjAwIiwiYSI6ImNsamw4cDM3NDAzejAzZG1uc2Y4MGJ4aWIifQ.9z0OvMdr2pISeiDFf4ufTw"
+        URL+="?alternatives=false&geometries=geojson&language=en&overview=full&steps=false&access_token=pk.eyJ1IjoiYWhtZWR5MTU1MjAwIiwiYSI6ImNscHU2anR0cjBrMjYyam1samJqN3Y5ZHcifQ.rI8SUfxadkqVpvemVZdvPw"
         # print("URL: " + str(URL))
         response = requests.get(URL)
     
@@ -384,7 +384,7 @@ def get_distance_between_two_loc(loc1, loc2):
     URL = 'https://api.mapbox.com/directions/v5/mapbox/driving/'
     URL += "{},{};{},".format(loc1[0], loc1[1], loc2[0], loc2[1])
     URL = URL[:-1]
-    URL += "?alternatives=false&geometries=geojson&language=en&overview=full&steps=false&access_token=pk.eyJ1IjoiYWhtZWR5MTU1MjAwIiwiYSI6ImNsamw4cDM3NDAzejAzZG1uc2Y4MGJ4aWIifQ.9z0OvMdr2pISeiDFf4ufTw"
+    URL += "?alternatives=false&geometries=geojson&language=en&overview=full&steps=false&access_token=pk.eyJ1IjoiYWhtZWR5MTU1MjAwIiwiYSI6ImNscHU2anR0cjBrMjYyam1samJqN3Y5ZHcifQ.rI8SUfxadkqVpvemVZdvPw"
 
     response = requests.get(URL)
 

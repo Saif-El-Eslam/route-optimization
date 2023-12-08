@@ -3,7 +3,7 @@ import axios from "axios";
 
 // Include the Mapbox JavaScript library
 mapboxgl.accessToken =
-  "pk.eyJ1IjoiaGFuZy1obyIsImEiOiJjbDA2M3F6bm4xcW05M2RvZHhpeDFsZTVvIn0.Ot8ZrqGcvLYWRLzyXtkUdA";
+  "pk.eyJ1IjoiYWhtZWR5MTU1MjAwIiwiYSI6ImNscHU2anR0cjBrMjYyam1samJqN3Y5ZHcifQ.rI8SUfxadkqVpvemVZdvPw";
 
 export const getAddress = async (coordinates) => {
   return await axios.get(
