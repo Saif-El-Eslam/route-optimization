@@ -23,6 +23,8 @@ class Bus(Document):
         coordinates=ListField(DecimalField(precision=6))))  # list of trip ids, pick/drop and coordinates [(id, "pickup", [long, lat]), (id, "dropoff", [long, lat])]
     route = ListField(IntField())  # list of location ids 1->2->3->4->5->1
     time_windows = ListField(ListField(IntField()))  # list of time windows
+    demands = ListField(IntField())  # list of demands
+    pickups_deliveries = ListField(ListField(IntField()))  # list of pickup/delivery pairs
     assigned_trips = ListField(ObjectIdField())  # list of trip ids
     status = StringField(max_length=20)  # "Active" or "Inactive"
     depot = ListField(DecimalField(precision=6))  # [long, lat]

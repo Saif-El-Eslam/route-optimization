@@ -19,8 +19,21 @@ if __name__ == "__main__":
 
     # #################################################################################
     # Egypt Data
+    # delete all buses
+    for bus in Bus.objects:
+        bus.delete()
+    print("Deleted all buses")
+    # Delete all rides
+    for ride in Ride.objects:
+        ride.delete()
+    # Make the ride_id for all users of type rider "None"
+    for user in User.objects(role=0):
+        user.ride_id = ""
+        user.save() 
+    print("Deleted all rides")
     buses = [{'bus_id': '1', 'capacity': 24, 'current_location': [30.770312, 30.813714], 'locations': [],
-              'route': [], 'time_windows': [[0,1440]], 'assigned_trips': [], 'status': 'Active', 'depot':  [30.770312, 30.813714]}]
+              'route': [], 'time_windows': [[0,1440]], 'assigned_trips': [], 'status': 'Active', 'depot':  [30.770312, 30.813714],
+              'pickups_deliveries':[],'demands':[0]}]
     for bus in buses:
         created_bus = create_bus(bus)
         print("Created Bus:", created_bus.bus_id)

@@ -49,7 +49,7 @@ def get_routes(solution, routing, manager):
 
 # Input: list of locations
 def VRP_pickup_dropoff_TW(
-    locations, time_window, max_pickup_delay=30, max_dropoff_delay=30, waiting_time=1, capacity=24
+    locations, time_window, demands, pickups_deliveries, max_pickup_delay=30, max_dropoff_delay=30, waiting_time=1, capacity=24
 ):
     """Entry point of the program.
     Args:
@@ -66,8 +66,9 @@ def VRP_pickup_dropoff_TW(
     """
 
     data = create_data_model(
-        locations, time_window, max_pickup_delay, max_dropoff_delay, waiting_time, capacity
+        locations, time_window, demands, pickups_deliveries, max_pickup_delay, max_dropoff_delay, waiting_time, capacity
     )
+    print("data: " + str(data))
     manager = pywrapcp.RoutingIndexManager(
         len(data["distance_matrix"]), data["num_vehicles"], data["depot"]
     )
@@ -170,29 +171,25 @@ def VRP_pickup_dropoff_TW(
 
 
 def create_data_model(
-    locations, time_window, max_pickup_delay=30, max_dropoff_delay=30, waiting_time=1, capacity=24
+    locations, time_window, demands, pickups_deliveries, max_pickup_delay=30, max_dropoff_delay=30, waiting_time=1, capacity=24
 ):
     """Stores the data for the problem."""
     data = {}
     data["distance_matrix"] = get_direction_matrix_arc(locations)
-    data["pickups_deliveries"] = [
-        [i * 2 + 1, i * 2 + 2] for i in range(int(len(locations)/2))
-    ]  # TODO: could pass it to the function or the locations should be in order (pickup, dropoff, pickup, dropoff, ...)
+    data["pickups_deliveries"] = pickups_deliveries
     data["num_vehicles"] = 1
     data["depot"] = 0
     timematrix = [[int(t / avg_bus_speed * 60) for t in row]
                   for row in data["distance_matrix"]]
-
     # add waiting time to all time matrix values except the zero values
     for i in range(len(timematrix)):
         for j in range(len(timematrix)):
             if timematrix[i][j] != 0:
                 timematrix[i][j] += waiting_time
-
     data["time_matrix"] = timematrix
     data["time_windows"] = time_window
     # demands is 0,1,-1,1,-1,1,-1
-    data["demands"] = [0] + [1, -1] * int(len(locations) / 2)
+    data["demands"] = demands
     # capacity is 20 for all vehicles
     data["vehicle_capacities"] = [
         capacity for i in range(data["num_vehicles"])]
@@ -328,7 +325,7 @@ def find_best_bus(buses, request):
 
     request_time_window = [[request_time, request_time + max_pickup_delay], [request_time +
                                                                              trip_time+max_dropoff_delay, request_time+trip_time+max_dropoff_delay+max_pickup_delay]]
-
+    
     shortest_distance = float("inf")
     best_bus = None
     best_bus_route = None
@@ -341,20 +338,27 @@ def find_best_bus(buses, request):
 
             current_minutes = datetime.now(local_time).hour * 60 + datetime.now(local_time).minute
             bus_time_windows = bus.time_windows
-            # TODO: change this to the current time
             bus_time_windows[0]= [current_minutes, current_minutes]
             # bus_time_windows[0]= [700, 700]
             time_windows = bus.time_windows + request_time_window
-            # print("time windows", time_windows)
+            demands = bus.demands + [1, -1]
+            print("old pickups_deliveries: " + str(bus.pickups_deliveries))
+            pickups_deliveries = bus.pickups_deliveries + [[len(coordinates_list)-2, len(coordinates_list)-1]]
+            print("new pickups_deliveries: " + str(pickups_deliveries))
+            
             print("coordinates_list: " + str(coordinates_list))
             print("time_windows: " + str(time_windows))
             print("max_pickup_delay: " + str(max_pickup_delay))
             print("max_dropoff_delay: " + str(max_dropoff_delay))
             print("waiting_time: " + str(waiting_time))
             print("bus.capacity: " + str(bus.capacity))
+            print("demand: " + str(demands))
+            print("pickups_deliveries: " + str(pickups_deliveries))
             result = VRP_pickup_dropoff_TW(
                 coordinates_list,
                 time_windows,
+                demands,
+                pickups_deliveries,
                 max_pickup_delay,
                 max_dropoff_delay,
                 waiting_time,
@@ -378,6 +382,11 @@ def find_best_bus(buses, request):
         best_bus.time_windows.append(request_time_window[1])
         best_bus.route = best_bus_route[0]
         best_bus.assigned_trips.append(request.id)
+        best_bus.demands.append(1)
+        best_bus.demands.append(-1)
+        best_bus.pickups_deliveries.append(
+            [len(coordinates_list)-2, len(coordinates_list)-1])
+        
         # update the depot to float
         best_bus.depot = [float(i) for i in best_bus.depot]
         # update the current location to float

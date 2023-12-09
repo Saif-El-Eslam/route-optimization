@@ -141,7 +141,8 @@ def get_bus_route():
 
 @ride_request_bp.route("/update_current_location", methods=["POST"])
 def update_location():
-    
+    """Update the current location of the bus 
+    used by the driver to update the current location of the bus"""
     bearer_token = request.headers.get('Authorization')
     token = bearer_token.split(' ')[1]
     try:
@@ -152,7 +153,6 @@ def update_location():
         if user.role != 1:
             return jsonify({'error': 'User is Unauthorized'}), 403
 
-        print("user.bus_id: " + str(user.bus_id))
         bus = get_bus_by_id(user.bus_id)
         if not bus:
             return jsonify({'error': 'Bus not found'}), 404
@@ -172,7 +172,8 @@ def update_location():
             # remove the second location from the route
             bus.route.pop(1)
             #  drop next_location_index from the locations list
-            bus.locations.pop(0)
+            bus.locations.pop(next_location_index-1)
+            bus.time_windows.pop(next_location_index-1)
             # update the locations list in the bus document
             bus.locations = bus.locations
             bus.save()
@@ -205,10 +206,12 @@ def update_location():
     
     except Exception as e:
         return jsonify({'error': str(e)}), 400
- 
+
+
 # get ride info for the rider
 @ride_request_bp.route("/ride_info", methods=["GET"])
 def get_ride_info():
+    """Get ride info for the rider"""
     bearer_token = request.headers.get('Authorization')
     token = bearer_token.split(' ')[1]
     try:
@@ -222,7 +225,6 @@ def get_ride_info():
         ride = get_ride_by_id(user.ride_id)
         if not ride:
             return jsonify({'error': 'Ride not found'}), 404
-        
 
         distance_to_pickup, duration_to_pickup, path_to_pickup, distance_to_dropoff, duration_to_dropoff, path_to_dropoff = get_trip_updates(ride.id)
         response_data = {
@@ -239,6 +241,10 @@ def get_ride_info():
             "timeToDropoff": duration_to_dropoff,
             "pathToDropoff": path_to_dropoff
         }
+        # print the type of each field in the response
+        for key, value in response_data.items():
+            print(key, type(value))
+
         return jsonify(response_data)
 
     except Exception as e:

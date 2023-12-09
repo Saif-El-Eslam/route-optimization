@@ -7,3 +7,7 @@ TODO:
 - Handle trips ar 12am
 - Put the Tokens in a config file (backend)
 - Make the map refresh static (remove the flyTo animation)
+- Implement other pages (About, Contact, User Settings, etc.)
+
+FIXME: 
+- when a new trip is created, the map on other users' devices does not update(CHECK IF THIS IS FIXED)

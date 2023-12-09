@@ -42,10 +42,10 @@ const BusPath = () => {
     navigator.geolocation.getCurrentPosition((position) => {
       updateBusCurrentLocation(
         // TODO: uncomment this
-        // position.coords.latitude,
-        // position.coords.longitude
-        30.8248,
-        30.82
+        position.coords.latitude,
+        position.coords.longitude
+        // 30.8248,
+        // 30.7748
       )
         .then((response) => {
           if (response.status === 200) {
@@ -150,7 +150,7 @@ const BusPath = () => {
           }, 3000);
         }
       });
-  }, [currentLocation.coordinates]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [mapKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     // get the addresses of the next location and next customer

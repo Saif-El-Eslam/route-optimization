@@ -15,6 +15,10 @@ const Map = ({ path_points, markers_points, openInfo }) => {
 
   // Need this seperate useEffect for map to handle "findElementById" error
   useEffect(() => {
+    console.log("openInfo", openInfo);
+    console.log("path_points", path_points);
+    console.log("markers_points", markers_points);
+
     const map = new mapboxgl.Map({
       container: "map",
       style: "mapbox://styles/mapbox/streets-v11",
@@ -75,9 +79,9 @@ const Map = ({ path_points, markers_points, openInfo }) => {
     if (coordinates.length !== 0) {
       // console.log(coordinates);
       // Zoom out on map
-      mainMap.fitBounds([path_points[0], path_points[path_points.length - 1]], {
-        padding: 150,
-      });
+      // mainMap.fitBounds([path_points[0], path_points[path_points.length - 1]], {
+      //   padding: 150,
+      // });
       // Draw path line on map
       mainMap.on("load", () => {
         if (!mainMap.getSource("route")) {
