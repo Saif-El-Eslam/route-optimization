@@ -10,4 +10,22 @@ TODO:
 - Implement other pages (About, Contact, User Settings, etc.)
 
 FIXME: 
-- when a new trip is created, the map on other users' devices does not update(CHECK IF THIS IS FIXED)
+- the current location is not being updated in the rider's app
+
+<!-- Testing -->
+- One trip:
+locations:[pickup, dropoff] .... in the model: [current_location, pickup, dropoff]
+route:[0, 1,2,0]
+demands:[0,1,-1]
+pickup_deliveries:[[1,2]]
+time_windows:[[0, 0], [0, 10], [10, 20]]
+
+---After the first stop---
+locations:[dropoff] .... in the model: [current_location, dropoff]
+route:[0, 2,0]
+demands:[0,-1]
+pickup_deliveries:[[]]
+time_windows:[[0, 0], [10, 20]]
+
+
+TODO: try to test the "update current location" feature by postman

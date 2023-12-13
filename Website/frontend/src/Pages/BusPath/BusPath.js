@@ -42,10 +42,21 @@ const BusPath = () => {
     navigator.geolocation.getCurrentPosition((position) => {
       updateBusCurrentLocation(
         // TODO: uncomment this
-        position.coords.latitude,
-        position.coords.longitude
-        // 30.8248,
-        // 30.7748
+        // position.coords.latitude,
+        // position.coords.longitude
+        //kafr megahd
+        // 30.8106,
+        // 30.78311
+        // kafr elzayat
+        30.806077,
+        30.82738
+        //tanta
+        // 30.790214,
+        // 31.000053
+        // Kom Hamada
+        // 30.765816,
+        // 30.687975
+
       )
         .then((response) => {
           if (response.status === 200) {
@@ -76,7 +87,7 @@ const BusPath = () => {
       // refresh the page
       // window.location.reload();
       setMapKey((prevKey) => prevKey + 1);
-    }, 7000);
+    }, 5000);
     return () => clearInterval(interval);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
