@@ -11,4 +11,5 @@ TODO:
 FIXME: 
 - The current location is not being updated in the rider's app
 - Check the map reload as it draws the new route on the old route then removes the old route on the next update (BusPath)
+- When the trip is over, the rider's app should be redirected to the home page and the session should be cleared
 

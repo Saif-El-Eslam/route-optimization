@@ -112,17 +112,16 @@
 .location-picker-container .mapboxgl-ctrl-geocoder .suggestions {
   position: absolute;
   width: 100%;
-  max-width: 342px;
+  max-width: 93%;
   max-height: 200px;
   overflow: auto;
-
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-top: 25px;
-  margin-left: -345px;
-  margin-right: 250px;
+
+  margin-left: -93%;
   padding: 0;
   list-style: none;
 

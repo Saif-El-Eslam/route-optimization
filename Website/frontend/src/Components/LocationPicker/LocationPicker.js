@@ -73,36 +73,39 @@ const LocationPicker = ({
         }
       );
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const handleInput = () => {
+      setTimeout(() => {
+        const pickupSuggestions = document.querySelector('#pickup-box .mapboxgl-ctrl-geocoder .suggestions');
+
+        if (pickupSuggestions && window.getComputedStyle(pickupSuggestions).display === 'block') {
+          // Suggestions are visible in pickup input
+          // Hide dropoff input
+          // document.getElementById('dropoff-box').style.display = 'none';
+          document.getElementById('dropoff-box').style.visibility = 'hidden';
+
+        } else {
+          // Suggestions are not visible in pickup input
+          // Show dropoff input
+          // document.getElementById('dropoff-box').style.display = 'block';
+          document.getElementById('dropoff-box').style.visibility = 'visible';
+
+        }
+      }, 300);
+    };
+    document.getElementById('pickup-box').addEventListener('input', handleInput);
+
+    return () => {
+      document.getElementById('pickup-box').removeEventListener('input', handleInput);
+    };
+  }, [pickupLocation, setPickupLocation]);
+
+
+
 
   const handleConfirm = async () => {
     if (pickupLocation && dropoffLocation) {
       setConfirmed(true);
-      // body: { pickupLocation, dropoffLocation , time, passenger count}
-      // const time = new Date();
-      // const passengerCount = 1;
-      // const requestData = {
-      //   pickupLocation,
-      //   dropoffLocation,
-      //   time,
-      //   passengerCount,
-      // };
-      // try {
-      //   const response = await fetch("http://127.0.0.1:5000/ride_request", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify(requestData),
-      //   });
-      //   if (!response.ok) {
-      //     throw new Error(`HTTP Error! Status: ${response.status}`);
-      //   }
-      //   const responseData = await response.json();
-      //   console.log(responseData);
-      // } catch (error) {
-      //   console.error("Error:", error);
-      // }
       const passengerCount = 1;
       const token = JSON.parse(sessionStorage.getItem("user")).token;
       const requestData = {
