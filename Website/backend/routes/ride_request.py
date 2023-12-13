@@ -357,62 +357,27 @@ def get_ride_info():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
-# check bus arrival at pickup/dropoff location
-# @ride_request_bp.route("/check_arrival", methods=["POST"])
-# def check_arrival():
-#     bearer_token = request.headers.get('Authorization')
-#     token = bearer_token.split(' ')[1]
-#     #1. check if the distance between the current location and the first location in the list is less than 0.1 miles
-#     #2. if yes,
-#         # if the action is pickup, update the status of the ride to "Active"
-#         # if the action is dropoff, update the status of the ride to "Completed"
-#         # remove the first location from the list
-#         # update the locations list in the bus document
-#     #3. if no, return the current location
-#     try:
-#         user = get_user_by_token(token)
-#         if not user:
-#             return jsonify({'error': 'Invalid token'}), 401
+@ride_request_bp.route("/restart_db", methods=["GET"])
+def restart_db():
+    """Restart the database"""
+    for bus in Bus.objects:
+        bus.delete()
+    print("Deleted all buses")
+    # Delete all rides
+    for ride in Ride.objects:
+        ride.delete()
+    # Make the ride_id for all users of type rider "None"
+    for user in User.objects(role=0):
+        user.ride_id = ""
+        user.save() 
+    print("Deleted all rides")
+    buses = [{'bus_id': '1', 'capacity': 24, 'current_location': [-85.5473919, 42.3226625], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.5473919, 42.3226625], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '2', 'capacity': 24, 'current_location': [-85.6880877, 42.2666994], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.6880877, 42.2666994], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '3', 'capacity': 24, 'current_location': [-85.5624162, 42.2977748], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.5624162, 42.2977748], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '4', 'capacity': 24, 'current_location': [-85.5940978, 42.2470918], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.5940978, 42.2470918], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '5', 'capacity': 24, 'current_location': [-85.6102235, 42.2845248], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.6102235, 42.2845248], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '6', 'capacity': 24, 'current_location': [-85.5355127, 42.334607], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.5355127, 42.334607], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '7', 'capacity': 24, 'current_location': [-85.5945787, 42.2475577], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.5945787, 42.2475577], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '8', 'capacity': 24, 'current_location': [-85.5544953, 42.2991703], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.5544953, 42.2991703], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '9', 'capacity': 24, 'current_location': [-85.5636076, 42.2513353], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.5636076, 42.2513353], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '10', 'capacity': 24, 'current_location': [-85.6087517, 42.2077529], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.6087517, 42.2077529], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '11', 'capacity': 24, 'current_location': [-85.457795, 42.399715], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.457795, 42.399715], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '12', 'capacity': 24, 'current_location': [-85.4727853, 42.1543539], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.4727853, 42.1543539], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '13', 'capacity': 24, 'current_location': [-85.5550967, 42.2581612], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.5550967, 42.2581612], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '14', 'capacity': 24, 'current_location': [-85.6320449, 42.2964597], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.6320449, 42.2964597], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '15', 'capacity': 24, 'current_location': [-85.4683159, 42.3747781], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.4683159, 42.3747781], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '16', 'capacity': 24, 'current_location': [-85.5859105, 42.2829969], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.5859105, 42.2829969], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '17', 'capacity': 24, 'current_location': [-85.409809, 42.2933292], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.409809, 42.2933292], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '18', 'capacity': 24, 'current_location': [-85.5033838, 42.1410135], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.5033838, 42.1410135], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '19', 'capacity': 24, 'current_location': [-85.5221051, 42.3280919], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.5221051, 42.3280919], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '20', 'capacity': 24, 'current_location': [-85.5844838, 42.1729487], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.5844838, 42.1729487], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '21', 'capacity': 24, 'current_location': [-85.7262985, 42.2457494], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.7262985, 42.2457494], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '22', 'capacity': 24, 'current_location': [-85.5794339, 42.262203], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.5794339, 42.262203], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '23', 'capacity': 24, 'current_location': [-85.5316711, 42.3407718], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.5316711, 42.3407718], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '24', 'capacity': 24, 'current_location': [-85.7507622, 42.2836978], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.7507622, 42.2836978], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '25', 'capacity': 24, 'current_location': [-85.5585162, 42.3321206], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.5585162, 42.3321206], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '26', 'capacity': 24, 'current_location': [-85.6114028, 42.2036211], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.6114028, 42.2036211], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '27', 'capacity': 24, 'current_location': [-85.7507622, 42.2836978], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.7507622, 42.2836978], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '28', 'capacity': 24, 'current_location': [-85.5701549, 42.2196805], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.5701549, 42.2196805], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '29', 'capacity': 24, 'current_location': [-85.4735514, 42.3071286], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.4735514, 42.3071286], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '30', 'capacity': 24, 'current_location': [-85.642907, 42.2749172], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.642907, 42.2749172], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '31', 'capacity': 24, 'current_location': [-85.4275675, 42.2873505], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.4275675, 42.2873505], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '32', 'capacity': 24, 'current_location': [-85.6495691, 42.2421546], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.6495691, 42.2421546], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '33', 'capacity': 24, 'current_location': [-85.6421558, 42.2899382], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.6421558, 42.2899382], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '34', 'capacity': 24, 'current_location': [-85.70643, 42.293878], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.70643, 42.293878], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '35', 'capacity': 24, 'current_location': [-85.5307056, 42.120423], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.5307056, 42.120423], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '36', 'capacity': 24, 'current_location': [-85.6478465, 42.1707126], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.6478465, 42.1707126], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '37', 'capacity': 24, 'current_location': [-85.6137927, 42.1494793], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.6137927, 42.1494793], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '38', 'capacity': 24, 'current_location': [-85.6259584, 42.3023157], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.6259584, 42.3023157], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '39', 'capacity': 24, 'current_location': [-85.6836554, 42.2523655], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.6836554, 42.2523655], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '40', 'capacity': 24, 'current_location': [-85.6032281, 42.1642518], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.6032281, 42.1642518], 'pickups_deliveries': [], 'demands': [0]}, {'bus_id': '41', 'capacity': 24, 'current_location': [-85.6142273, 42.2050614], 'locations': [], 'route': [], 'time_windows': [[0, 1440]], 'assigned_trips': [], 'status': 'Active', 'depot': [-85.6142273, 42.2050614], 'pickups_deliveries': [], 'demands': [0]}]
 
-#         if user.role != 1:
-#             return jsonify({'error': 'User is Unauthorized'}), 403
-
-#         bus = get_bus_by_id(user.bus_id)
-#         if not bus:
-#             return jsonify({'error': 'Bus not found'}), 404
-
-#         locations_list = bus.locations
-#         current_location = bus.current_location
-#         next_location_index = bus.route[1]
-#         next_location = locations_list[next_location_index-1]
-#         distance_to_next_location, duration_to_next_location, path_to_next_location = calcluate_trip_parmaters([current_location, next_location["coordinates"]])
-#         if distance_to_next_location < 0.1:
-#             # remove the second location from the route
-#             bus.route.pop(1)
-#             #  drop next_location_index from the locations list
-#             locations_list.pop(next_location_index-1)
-#             # update the locations list in the bus document
-#             bus.locations = locations_list
-
-#             bus.save()
-#             # update the status of the ride to "Active" or "Completed"
-#             if next_location["action"] == "pickup":
-#                 ride = get_ride_by_id(next_location["trip_id"])
-#                 ride.status = "Active"
-#                 ride.save()
-#             elif next_location["action"] == "dropoff":
-#                 ride = get_ride_by_id(next_location["trip_id"])
-#                 ride.status = "Completed"
-#                 ride.save()
-#                 # remove the trip id from assigned_trips in the bus document
-#                 bus.assigned_trips.remove(ride.id)
-#                 bus.save()
-#             return jsonify({"message": "Bus arrived at pickup/dropoff location"}), 200
-#         else:
-#             return jsonify({"error": "Bus not at pickup/dropoff location"}), 400
-
-#     except Exception as e:
-#         return jsonify({'error': str(e)}), 400
+    for bus in buses:
+        created_bus = create_bus(bus)
+        print("Created Bus:", created_bus.bus_id)
+    print("Created all buses")
+    return jsonify({"message": "Database restarted"}), 200
 
 
 def get_trip_updates(trip_id):
