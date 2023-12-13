@@ -37,6 +37,7 @@ const LocationPicker = ({
           coordinates: e.result.geometry.coordinates,
           address: e.result.place_name,
         });
+        document.getElementById('dropoff-box').style.visibility = 'visible';
       });
     }
 
