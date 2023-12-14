@@ -381,6 +381,7 @@ def restart_db():
 
 
 def get_trip_updates(trip_id):
+    # print("trip_id: " + str(trip_id))
     # get trip (ride request) from db
     trip = get_ride_by_id(trip_id)
     # print("trip: " + str(trip))
@@ -403,6 +404,7 @@ def get_trip_updates(trip_id):
     # print("current_location: " + str(current_location))
     # arrange locations in the order of the route
     ordered_locations = []
+    # print("route: " + str(route))
     for i in route:
         ordered_locations.append(locations[i-1])
     # append current location to the beginning of the list
@@ -413,20 +415,47 @@ def get_trip_updates(trip_id):
     # get list of locations from current location to pickup location
     pickup_location = {"trip_id": trip.id, "action": "pickup",
                        "coordinates": [float(i) for i in trip.start_location]}
-    locations_to_pickup = ordered_locations[0:ordered_locations.index(
-        pickup_location)+1]
+    if pickup_location  in ordered_locations:
+        locations_to_pickup = ordered_locations[0:ordered_locations.index(
+            pickup_location)+1]    
+    else:
+        locations_to_pickup = [ordered_locations[0]]
     # print("locations_to_pickup: " + str(locations_to_pickup))
     # get list of locations from pickup location to dropoff location
     dropoff_location = {"trip_id": trip.id, "action": "dropoff",
                         "coordinates": [float(i) for i in trip.end_location]}
-    locations_to_dropoff = ordered_locations[ordered_locations.index(
-        pickup_location):ordered_locations.index(dropoff_location)+1]
-    # print("locations_to_dropoff: " + str(locations_to_dropoff))
-    distance_to_pickup, duration_to_pickup, path_to_pickup = calcluate_trip_parmaters(
-        [i["coordinates"] for i in locations_to_pickup])
-    distance_to_dropoff, duration_to_dropoff, path_to_dropoff = calcluate_trip_parmaters(
-        [i["coordinates"] for i in locations_to_dropoff])
+    if dropoff_location in ordered_locations:
+        if pickup_location in ordered_locations:
+            locations_to_dropoff = ordered_locations[ordered_locations.index(
+                pickup_location):ordered_locations.index(dropoff_location)+1]
+        else:
+            locations_to_dropoff = ordered_locations[0:ordered_locations.index(
+                dropoff_location)+1]
+    else:
+        locations_to_dropoff = [ordered_locations[0]]
 
+    # print("locations_to_dropoff: " + str(locations_to_dropoff))
+    if len(locations_to_pickup) == 1:
+        distance_to_pickup = 0
+        duration_to_pickup = 0
+        path_to_pickup = []
+    else:
+        distance_to_pickup, duration_to_pickup, path_to_pickup = calcluate_trip_parmaters(
+            [i["coordinates"] for i in locations_to_pickup])
+        
+    if len(locations_to_dropoff) == 1:
+        distance_to_dropoff = 0
+        duration_to_dropoff = 0
+        path_to_dropoff = []
+    else:
+        distance_to_dropoff, duration_to_dropoff, path_to_dropoff = calcluate_trip_parmaters(
+            [i["coordinates"] for i in locations_to_dropoff])
+    # print("distance_to_pickup: " + str(distance_to_pickup))
+    # print("duration_to_pickup: " + str(duration_to_pickup))
+    # print("path_to_pickup: " + str(path_to_pickup))
+    # print("distance_to_dropoff: " + str(distance_to_dropoff))
+    # print("duration_to_dropoff: " + str(duration_to_dropoff))
+    # print("path_to_dropoff: " + str(path_to_dropoff))
     return distance_to_pickup, duration_to_pickup, path_to_pickup, distance_to_dropoff, duration_to_dropoff, path_to_dropoff
 
 

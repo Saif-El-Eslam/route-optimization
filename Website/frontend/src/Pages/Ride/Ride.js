@@ -17,7 +17,6 @@ const RequestRide = () => {
   const [markers, setMarkers] = useState([]);
   const [errors, setErrors] = useState([]);
   const [mapKey, setMapKey] = useState(0);
-  // TODO: get the data dynamically as it not updated periodically as it shoudlbe (look at the map key useEffect for more info)
   useEffect(() => {
     getRideInfo()
       .then((response) => {
@@ -25,11 +24,28 @@ const RequestRide = () => {
           setRideInfo(response.data);
           setPickupPath(response.data.pathToPickup);
           setDropoffPath(response.data.pathToDropoff);
-          console.log(response.data);
+          console.log("response.data.pathToPickup.length", response.data.pathToPickup.length)
+          console.log("response.data.pathToDropoff.length", response.data.pathToDropoff.length)
+          if (response.data.pathToPickup.length == 0 && response.data.pathToDropoff.length == 0) {
+           //clear session storage
+            sessionStorage.removeItem("rideId");
+            //redirect to home page
+            window.location.href = "/";
+          }
         }
       })
       .catch((error) => {
         if (error.response) {
+          const user = JSON.parse(sessionStorage.getItem("user"));
+          // set user.ride_id to null
+          user.ride_id = "";
+          // set user in session storage
+          sessionStorage.setItem("user", JSON.stringify(user));
+          //clear session storage
+          sessionStorage.setItem("rideId", "");
+
+          //redirect to home page
+          window.location.href = "/get-locations";
           setErrors([...errors, error.response.data.error]);
           setTimeout(() => {
             setErrors(
@@ -38,23 +54,27 @@ const RequestRide = () => {
           }, 3000);
         }
       });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [mapKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // // update the map key every 10 seconds to force a re-render
   useEffect(() => {
     const interval = setInterval(() => {
       setMapKey(mapKey + 1);
-    }, 10000);
+    }, 5000);
     return () => clearInterval(interval);
   }, [mapKey]);
 
   useEffect(() => {
     setWholePath([...pickupPath, ...dropoffPath]);
-    setMarkers([
-      pickupPath[0],
-      pickupPath[pickupPath.length - 1],
-      dropoffPath[dropoffPath.length - 1],
-    ]);
+    if (pickupPath.length == 0 && dropoffPath.length != 0) {
+      setMarkers([dropoffPath[0], dropoffPath[dropoffPath.length - 1]]);
+    } else {
+      setMarkers([
+        pickupPath[0],
+        pickupPath[pickupPath.length - 1],
+        dropoffPath[dropoffPath.length - 1],
+      ]);
+    }
   }, [pickupPath, dropoffPath]);
 
   useEffect(() => {

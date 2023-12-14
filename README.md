@@ -8,8 +8,3 @@ TODO:
 - Enforce Strong Passwords
 - Implement other pages (About, Contact, User Settings, etc.)
 
-
-FIXME: 
-- The current location is not being updated in the rider's app
-- When the trip is over, the rider's app should be redirected to the home page and the session should be cleared
-
