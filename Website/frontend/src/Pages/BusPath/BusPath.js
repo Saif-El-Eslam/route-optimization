@@ -62,9 +62,10 @@ const BusPath = () => {
           if (response.status === 200) {
             console.log("updated location");
           }
+          // update the current location
           setCurrentLocation({
             ...currentLocation,
-            coordinates: [position.coords.longitude, position.coords.latitude],
+            coordinates: [position.coords.latitude, position.coords.longitude],
           });
         })
         .catch((error) => {
@@ -91,12 +92,6 @@ const BusPath = () => {
     return () => clearInterval(interval);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Useeffect to update the map upon the current location of the bus
-  useEffect(() => {
-    if (currentLocation.coordinates.length !== 0) {
-      setMarkersPoints([...markersPoints, currentLocation.coordinates]);
-    }
-  }, [currentLocation.coordinates]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     getBusRoute()
@@ -147,8 +142,6 @@ const BusPath = () => {
                 }, 3000);
               }
             });
-
-          console.log(response.data);
         }
       })
       .catch((error) => {
