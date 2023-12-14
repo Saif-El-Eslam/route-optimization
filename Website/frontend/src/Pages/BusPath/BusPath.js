@@ -42,14 +42,14 @@ const BusPath = () => {
     navigator.geolocation.getCurrentPosition((position) => {
       updateBusCurrentLocation(
         // TODO: uncomment this
-        // position.coords.latitude,
-        // position.coords.longitude
+        position.coords.latitude,
+        position.coords.longitude
         //kafr megahd
         // 30.8106,
         // 30.78311
         // kafr elzayat
-        30.806077,
-        30.82738
+        // 30.806077,
+        // 30.82738
         //tanta
         // 30.790214,
         // 31.000053
