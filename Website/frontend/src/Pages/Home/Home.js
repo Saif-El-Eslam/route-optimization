@@ -23,7 +23,6 @@ const Home = () => {
       .then((response) => {
         // set user in session storage
         sessionStorage.setItem("user", JSON.stringify(response.data));
-        console.log(response.ride_id && response.ride_id !== "");
         setLoggedIn(true);
 
         if (

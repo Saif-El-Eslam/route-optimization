@@ -15,9 +15,9 @@ const Map = ({ path_points, markers_points, openInfo }) => {
 
   // Need this seperate useEffect for map to handle "findElementById" error
   useEffect(() => {
-    console.log("openInfo", openInfo);
-    console.log("path_points", path_points);
-    console.log("markers_points", markers_points);
+    // console.log("openInfo", openInfo);
+    // console.log("path_points", path_points);
+    // console.log("markers_points", markers_points);
 
     const map = new mapboxgl.Map({
       container: "map",

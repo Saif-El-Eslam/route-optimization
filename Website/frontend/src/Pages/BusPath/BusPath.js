@@ -59,9 +59,9 @@ const BusPath = () => {
 
       )
         .then((response) => {
-          if (response.status === 200) {
-            console.log("updated location");
-          }
+          // if (response.status === 200) {
+          //   console.log("updated location");
+          // }
           // update the current location
           setCurrentLocation({
             ...currentLocation,
@@ -88,7 +88,7 @@ const BusPath = () => {
       // refresh the page
       // window.location.reload();
       setMapKey((prevKey) => prevKey + 1);
-    }, 5000);
+    }, 15000);
     return () => clearInterval(interval);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

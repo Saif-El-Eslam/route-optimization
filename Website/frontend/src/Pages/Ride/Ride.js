@@ -24,8 +24,6 @@ const RequestRide = () => {
           setRideInfo(response.data);
           setPickupPath(response.data.pathToPickup);
           setDropoffPath(response.data.pathToDropoff);
-          console.log("response.data.pathToPickup.length", response.data.pathToPickup.length)
-          console.log("response.data.pathToDropoff.length", response.data.pathToDropoff.length)
           if (response.data.pathToPickup.length == 0 && response.data.pathToDropoff.length == 0) {
            //clear session storage
             sessionStorage.removeItem("rideId");
@@ -60,7 +58,7 @@ const RequestRide = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setMapKey(mapKey + 1);
-    }, 5000);
+    }, 15000);
     return () => clearInterval(interval);
   }, [mapKey]);
 
