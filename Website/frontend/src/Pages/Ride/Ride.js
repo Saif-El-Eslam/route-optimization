@@ -169,7 +169,7 @@ const RequestRide = () => {
                   <div className="ride-info-item-content">
                     {Math.round(rideInfo?.timeToPickup)} min
                     <span style={{ fontWeight: "bold" }}>
-                      (~{rideInfo?.distanceToPickup?.toFixed(2)} KM)
+                      (~{rideInfo?.distanceToPickup?.toFixed(2)} Miles)
                     </span>
                   </div>
                 </div>
@@ -181,7 +181,7 @@ const RequestRide = () => {
                     )}{" "}
                     min
                     <span style={{ fontWeight: "bold" }}>
-                      (~{rideInfo?.distanceToDropoff?.toFixed(2)} KM)
+                      (~{rideInfo?.distanceToDropoff?.toFixed(2)} Miles)
                     </span>
                   </div>
                 </div>

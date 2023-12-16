@@ -485,8 +485,8 @@ def calcluate_trip_parmaters(locations_list):
 
         if response.status_code == 200:
             data = response.json()
-            # distance+=data['routes'][0]['distance']*0.000621371 # in miles
-            distance += data['routes'][0]['distance']/1000  # in km
+            distance+=data['routes'][0]['distance']*0.000621371 # in miles
+            # distance += data['routes'][0]['distance']/1000  # in km
             duration += data['routes'][0]['duration']/60  # in minutes
             # Extract the geometry
             path_coordinates = data['routes'][0]['geometry']['coordinates']
@@ -509,8 +509,8 @@ def get_distance_between_two_loc(loc1, loc2):
 
     if response.status_code == 200:
         data = response.json()
-        # distance += data['routes'][0]['distance'] * 0.000621371 # in miles
-        distance += data['routes'][0]['distance'] / 1000  # in km
+        distance += data['routes'][0]['distance'] * 0.000621371 # in miles
+        # distance += data['routes'][0]['distance'] / 1000  # in km
         duration += data['routes'][0]['duration'] / 60  # in minutes
         path_coordinates = data['routes'][0]['geometry']['coordinates']
         path.extend(path_coordinates)

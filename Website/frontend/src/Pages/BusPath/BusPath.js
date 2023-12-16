@@ -241,7 +241,7 @@ const BusPath = () => {
                     <div className="bus-ride-info-content-item-content">
                       {Math.round(rideInfo?.duration)} min
                       <span style={{ fontWeight: "bold" }}>
-                        (~{rideInfo?.distance?.toFixed(2)} KM)
+                        (~{rideInfo?.distance?.toFixed(2)} Miles)
                       </span>
                     </div>
                   </div>
