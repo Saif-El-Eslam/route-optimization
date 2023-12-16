@@ -15,8 +15,8 @@ from tkintermapview import TkinterMapView
 gmaps = googlemaps.Client(key="AIzaSyCKNRwMEYukzka5pRhiPL8LrJG_U4qlW2A")
 MAPBOX_TOKEN = "pk.eyJ1IjoiYWhtZWR5MTU1MjAwIiwiYSI6ImNscHU2anR0cjBrMjYyam1samJqN3Y5ZHcifQ.rI8SUfxadkqVpvemVZdvPw"
 avg_bus_speed = 40  # km/h
-max_pickup_delay = 50  # minutes
-max_dropoff_delay = 50  # minutes
+max_pickup_delay = 30  # minutes
+max_dropoff_delay = 30  # minutes
 waiting_time = 1  # minutes
 
 

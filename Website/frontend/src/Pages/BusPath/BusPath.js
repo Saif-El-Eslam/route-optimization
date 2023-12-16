@@ -88,7 +88,7 @@ const BusPath = () => {
       // refresh the page
       // window.location.reload();
       setMapKey((prevKey) => prevKey + 1);
-    }, 15000);
+    }, 5000);
     return () => clearInterval(interval);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

@@ -58,7 +58,7 @@ const RequestRide = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setMapKey(mapKey + 1);
-    }, 15000);
+    }, 5000);
     return () => clearInterval(interval);
   }, [mapKey]);
 
